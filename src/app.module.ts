@@ -5,12 +5,13 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { config } from "./core/database/config";
 import HttpExceptionFilter from "./core/exceptions/filter";
-import TodoModule from "./modules/todos/todo.module";
 import { ConfigModule } from "@nestjs/config";
 import { configSchema } from "./config/enviroment-validation-schema";
 import { RequestLoggerMiddleware } from "./core/middlewares/request-logger.middleware";
+import ServiceModule from "./modules/services/service.module";
+import {AuthModule} from "./modules/auth/auth.module";
 
-const CUSTOM_MODULES = [TodoModule];
+const CUSTOM_MODULES = [ServiceModule, AuthModule];
 
 @Module({
   imports: [

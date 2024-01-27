@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 config();
 import databaseConfig from './database.config';
 import loggingConfig from './logging.config';
+import keycloakConfig from './keycloak.config';
 import { ConfigDTO } from './dto/config.dto';
 
 const CONFIG = {
@@ -15,6 +16,7 @@ const CONFIG = {
   },
   DATABASE: { ...databaseConfig },
   LOGGING: { ...loggingConfig },
+  KEYCLOAK: {... keycloakConfig},
 } as ConfigDTO;
 
 export default CONFIG;
