@@ -21,8 +21,14 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Copy .env.example to .env
+        run: cp .env.example .env && echo "NODE_ENV=production" > .env
+
       - name: Build Nest App
         run: npm run build
+
+      - name: Copy .env.example to dist
+        run: cp .env dist
 
       - name: Deploy to Vultr
         uses: appleboy/scp-action@master
