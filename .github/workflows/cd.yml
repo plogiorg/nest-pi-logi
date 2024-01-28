@@ -29,7 +29,7 @@ jobs:
         with:
           host: ${{ secrets.VULTR_SSH_HOST }}
           username: ${{ secrets.VULTR_SSH_USER }}
-          key: ${{ secrets.VULTR_SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.VULTR_SSH_PORT }}
           source: dist/
           target: /nest-app
