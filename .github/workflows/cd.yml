@@ -1,4 +1,7 @@
-name: Deploy to Vultr
+# - name: Copy .env.example to .env
+# run: cp .env.example .env && sed -i 's/^NODE_ENV=.*$/NODE_ENV=production/' .env
+
+name: Deploy to Server
 
 on:
   push:
@@ -13,29 +16,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          node-version: '14'
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Install Dependencies
-        run: npm install
+      - name: SSH to Server, Clone, and Build
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_USER@$SSH_HOST 'cd ~/nest-pi-logi && git pull && npm install && npm run build'
 
-      - name: Copy .env.example to .env
-        run: cp .env.example .env && sed -i 's/^NODE_ENV=.*$/NODE_ENV=production/' .env
-
-      - name: Build Nest App
-        run: npm run build
-
-      - name: Copy .env.example to dist
-        run: cp .env dist
-
-      - name: Deploy to Vultr
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.VULTR_SSH_HOST }}
-          username: ${{ secrets.VULTR_SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.VULTR_SSH_PORT }}
-          source: dist/
-          target: ~/nest-app
+      - name: Start the Application
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_USER@$SSH_HOST 'cd ~/nest-pi-logi && npm start'
