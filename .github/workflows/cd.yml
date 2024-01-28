@@ -12,16 +12,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+        
+      - name: Install, Build, Run
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: SSH to Server, Clone, and Build
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} "$VULTR_SSH_USER@$VULTR_SSH_HOST" 'cd ~/nest-pi-logi && git pull && npm install && npm run build'
-
-      - name: Start the Application
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} "$VULTR_SSH_USER@$VULTR_SSH_HOST" 'cd ~/nest-pi-logi && npm start'
+          host: ${{ secrets.VULTR_SSH_HOST  }}
+          username: ${{ secrets.VULTR_SSH_USER }}
+          key: ${{ secrets.SSH_KEY  }}
+          port: ${{ secrets.VULTR_SSH_PORT  }}
+          script: |
+            cd ~/nest-pi-logi && git pull && npm install && npm run build
+            cd ~/nest-pi-logi && npm start
