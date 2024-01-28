@@ -21,5 +21,5 @@ jobs:
           key: ${{ secrets.SSH_KEY  }}
           port: ${{ secrets.VULTR_SSH_PORT  }}
           script: |
-            cd ~/nest-pi-logi && git pull && npm install && npm run prepare
-            cd ~/nest-pi-logi && pm2 start dist/main.js
+            cd ~/nest-pi-logi && git pull && npm install && npm run pre
+            cd ~/nest-pi-logi && pm2 restart dist/main.js
