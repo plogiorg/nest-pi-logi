@@ -23,8 +23,8 @@ jobs:
 
       - name: SSH to Server, Clone, and Build
         run: |
-          ssh -o StrictHostKeyChecking=no -i $SSH_KEY $VULTR_SSH_USER@$VULTR_SSH_HOST 'cd ~/nest-pi-logi && git pull && npm install && npm run build'
+          ssh -o StrictHostKeyChecking=no -i $SSH_KEY "$VULTR_SSH_USER@$VULTR_SSH_HOST" 'cd ~/nest-pi-logi && git pull && npm install && npm run build'
 
       - name: Start the Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i $SSH_KEY $VULTR_SSH_USER@$VULTR_SSH_HOST 'cd ~/nest-pi-logi && npm start'
+          ssh -o StrictHostKeyChecking=no -i $SSH_KEY "$VULTR_SSH_USER@$VULTR_SSH_HOST" 'cd ~/nest-pi-logi && npm start'
