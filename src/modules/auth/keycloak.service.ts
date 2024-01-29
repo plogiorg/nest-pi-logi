@@ -81,7 +81,7 @@ export class KeycloakService {
                 },
             ),
         );
-
+        console.log({data})
         return data;
     }
 

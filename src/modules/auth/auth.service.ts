@@ -18,8 +18,6 @@ export class AuthService {
   async login(username: string, password: string): Promise<LoginResponse> {
     const { access_token, expires_in, refresh_token, refresh_expires_in } =
       await this.keycloakService.login(username, password).catch(({response}) => {
-        console.log(response.data)
-        // console.log(error)
         throw new UnauthorizedException(response?.data?.error_description || "");
       });
 
@@ -33,8 +31,8 @@ export class AuthService {
 
   async getProfile(accessToken: string) {
     this.logger.log('Getting user profile...');
-
-    return this.keycloakService.getUserInfo(accessToken).catch(() => {
+    console.log({accessToken})
+    return this.keycloakService.getUserInfo(accessToken).catch((error) => {
       throw new UnauthorizedException();
     });
   }

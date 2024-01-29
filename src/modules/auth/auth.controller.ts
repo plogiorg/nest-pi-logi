@@ -39,7 +39,7 @@ export class AuthController {
     return this.authService.login(username, password);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get({
     path: "/me",
     description: "",
@@ -47,7 +47,7 @@ export class AuthController {
   })
   getProfile(@Request() req: Request) {
     const { authorization } = req.headers as any;
-
+    console.log({authorization})
     const [, accessToken] = authorization.split(' ');
 
     return this.authService.getProfile(accessToken);
