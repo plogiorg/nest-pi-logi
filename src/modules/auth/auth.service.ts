@@ -31,7 +31,6 @@ export class AuthService {
 
   async getProfile(accessToken: string) {
     this.logger.log('Getting user profile...');
-    console.log({accessToken})
     return this.keycloakService.getUserInfo(accessToken).catch((error) => {
       throw new UnauthorizedException();
     });
