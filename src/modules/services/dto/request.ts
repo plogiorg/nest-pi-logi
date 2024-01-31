@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class CreateServiceRequestDTO {
+export class CreateServiceTypeRequestDTO {
   @ApiProperty()
   @IsString()
   title: string;
@@ -24,4 +24,44 @@ export class UpdateStatusRequestDTO {
   @ApiProperty()
   @IsBoolean()
   isActive: boolean;
+}
+
+export class CreateServiceRequestDTO {
+  @ApiProperty()
+  serviceTypeId:number;
+
+  @ApiProperty()
+  @IsString()
+  userId:string;
+
+
+  @ApiProperty()
+  @IsString()
+  description:string;
+
+  @ApiProperty()
+  @IsNumber()
+  price:number;
+}
+
+export class UpdateServiceRequestDTO {
+  @ApiProperty()
+  serviceTypeId:number;
+
+  @ApiProperty()
+  serviceId:number;
+
+
+  @ApiProperty()
+  @IsString()
+  userId:string;
+
+
+  @ApiProperty()
+  @IsString()
+  description:string;
+
+  @ApiProperty()
+  @IsNumber()
+  price:number;
 }

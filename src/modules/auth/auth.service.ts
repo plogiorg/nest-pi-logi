@@ -36,6 +36,14 @@ export class AuthService {
     });
   }
 
+  async getUsers(accessToken: string) {
+    this.logger.log('Getting user profile...');
+    return this.keycloakService.getUsers(accessToken).catch((error) => {
+      throw new UnauthorizedException();
+    });
+  }
+
+
   async refreshToken(refreshToken: string): Promise<LoginResponse> {
     const { access_token, expires_in, refresh_token, refresh_expires_in } =
       await this.keycloakService.refreshToken(refreshToken).catch(() => {

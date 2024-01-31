@@ -2,8 +2,8 @@ import BaseEntity from "src/core/entity/base.entity";
 import { Column, Entity, Index } from "typeorm";
 
 
-@Entity("services")
-export default class ServiceEntity extends BaseEntity {
+@Entity("services_types")
+export default class ServiceTypeEntity extends BaseEntity {
     @Column({
         name: "title",
     })

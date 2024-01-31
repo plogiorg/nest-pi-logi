@@ -20,6 +20,13 @@ type UserInfoResponse = {
     preferred_username: string;
 };
 
+type UserListResponse = {
+  id: string,
+  createdTimestamp: number,
+  username: string,
+  enabled: boolean,
+  emailVerified: boolean,
+};
 @Injectable()
 export class KeycloakService {
     private readonly baseURL: string;
@@ -85,6 +92,19 @@ export class KeycloakService {
         return data;
     }
 
+  async getUsers(accessToken: string): Promise<UserListResponse[]> {
+    const {data} = await firstValueFrom(
+      this.httpService.get(
+        `${this.baseURL}/admin/realms/${this.realm}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      ),
+    );
+    return data;
+  }
     async refreshToken(refreshToken: string): Promise<LoginResponse> {
         const {data} = await firstValueFrom(
             this.httpService.post(

@@ -8,7 +8,7 @@ import { Controller, Get, Post, Put } from "src/core/decorators";
 
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import {CreateServiceResponseDTO} from "../services/dto/response";
+import {CreateServiceTypeResponseDTO} from "../services/dto/response";
 import {LoginRequestDTO} from "./dto/request";
 
 
@@ -73,7 +73,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(@Body() body: LogoutRequestBody) {
     const { refresh_token: refreshToken } = body;
-
     await this.authService.logout(refreshToken);
+  }
+
+  @Post({
+    path: "/users",
+    description: "",
+    model: null,
+  })
+  @HttpCode(HttpStatus.OK)
+  async getUsers(@Request() req: Request) {
+    const { authorization } = req.headers as any;
+    const [, accessToken] = authorization.split(' ');
+    await this.authService.getUsers(accessToken);
   }
 }

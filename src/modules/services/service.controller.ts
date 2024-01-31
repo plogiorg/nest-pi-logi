@@ -1,11 +1,17 @@
-import { Body, Param, Query } from "@nestjs/common";
-import { Controller, Get, Post, Put } from "src/core/decorators";
+import { Body, Param } from "@nestjs/common";
+import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
     CreateServiceRequestDTO,
+    CreateServiceTypeRequestDTO, UpdateServiceRequestDTO,
     UpdateStatusRequestDTO,
 } from "./dto/request";
 import ServiceService from "./service.service";
-import {CreateServiceResponseDTO, GetServicesResponseDTO, UpdateServiceResponseDTO} from "./dto/response";
+import {
+    CreateServiceTypeResponseDTO,
+    GetServiceResponseDTO, GetServicesResponseDTO,
+    GetServiceTypesResponseDTO,
+    UpdateServiceTypeResponseDTO,
+} from "./dto/response";
 
 @Controller({
     group: "Service",
@@ -16,29 +22,82 @@ export default class ServiceController {
     constructor(private _serviceService: ServiceService) {}
 
     @Get({
+        path: "/types",
+        description: "Get all service types",
+        model: GetServiceTypesResponseDTO,
+    })
+    getServiceTypes() {
+        // TODO: restrict access to only admin
+        return this._serviceService.getServiceTypes();
+    }
+
+    @Post({
+        path: "/types",
+        description: "Create a new Service",
+        model: CreateServiceTypeResponseDTO,
+    })
+    createServiceType(@Body() data: CreateServiceTypeRequestDTO) {
+        // TODO: restrict access to only admin
+        return this._serviceService.createServiceType(data);
+    }
+
+    @Put({
+        path: "/types/:id",
+        description: "Toggle a service's status",
+        model: UpdateServiceTypeResponseDTO,
+    })
+    updateServiceTypeStatus(@Body() data: UpdateStatusRequestDTO, @Param("id") id: number) {
+        // TODO: restrict access to only admin
+        return this._serviceService.toggleServiceTypeStatus(id, data);
+    }
+
+
+    @Get({
         path: "/",
         description: "Get all services",
         model: GetServicesResponseDTO,
     })
-    getTodos() {
+    getServices() {
         return this._serviceService.getServices();
     }
 
     @Post({
         path: "/",
         description: "Create a new Service",
-        model: CreateServiceResponseDTO,
+        model: GetServiceResponseDTO,
     })
-    createTodo(@Body() data: CreateServiceRequestDTO) {
+    createService(@Body() data: CreateServiceRequestDTO) {
         return this._serviceService.createService(data);
     }
 
-    @Put({
+    @Get({
         path: "/:id",
-        description: "Toggle a service's status",
-        model: UpdateServiceResponseDTO,
+        description: "get Service",
+        model: GetServiceResponseDTO,
     })
-    updateTodo(@Body() data: UpdateStatusRequestDTO, @Param("id") id: number) {
-        return this._serviceService.toggleServiceStatus(id, data);
+    getService( @Param("id") id: number) {
+        return this._serviceService.getService(id);
     }
+
+    @Patch({
+        path: "/:id",
+        description: "Update Service",
+        model: GetServiceResponseDTO,
+    })
+    updateService( @Param("id") id: number, @Body() data: UpdateServiceRequestDTO) {
+        return this._serviceService.updateService(id, data);
+    }
+
+    @Post({
+        path: "/:id",
+        description: "Delete Service",
+        model: GetServiceResponseDTO,
+    })
+    deleteService( @Param("id") id: number) {
+        return this._serviceService.deleteService(id);
+    }
+
+
+
+
 }

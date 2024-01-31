@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 
-export class ServiceResponse {
+export class ServiceTypeResponse {
   @ApiProperty()
   id: number;
 
@@ -21,6 +21,35 @@ export class ServiceResponse {
   isActive: boolean;
 }
 
+export class ServiceResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  price: number;
+}
+
+export class GetServiceTypesResponseDTO {
+  @ApiProperty({
+    isArray: true,
+    type: ServiceTypeResponse,
+  })
+  services: ServiceTypeResponse[];
+}
+
+export class CreateServiceTypeResponseDTO {
+  @ApiProperty()
+  service: ServiceTypeResponse;
+}
+
+export class UpdateServiceTypeResponseDTO {
+  @ApiProperty()
+  service: ServiceTypeResponse;
+}
+
 export class GetServicesResponseDTO {
   @ApiProperty({
     isArray: true,
@@ -29,12 +58,12 @@ export class GetServicesResponseDTO {
   services: ServiceResponse[];
 }
 
-export class CreateServiceResponseDTO {
+export class GetServiceResponseDTO {
   @ApiProperty()
   service: ServiceResponse;
 }
 
 export class UpdateServiceResponseDTO {
   @ApiProperty()
-  service: ServiceResponse;
+  service: ServiceTypeResponse;
 }
