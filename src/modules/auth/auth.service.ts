@@ -37,10 +37,21 @@ export class AuthService {
   }
 
   async getUsers(accessToken: string) {
-    this.logger.log('Getting user profile...');
-    return this.keycloakService.getUsers(accessToken).catch((error) => {
+    this.logger.log('Getting user list...');
+    const users = await this.keycloakService.getUsers(accessToken).catch((error) => {
       throw new UnauthorizedException();
     });
+    return users.map((user =>({
+      id: user.sub,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      type: "YourType",
+      active: user.enabled,
+      phone: user.attributes?.phone?.[0] || '',
+      country: user.attributes?.country?.[0] || '' ,
+      street: user.attributes?.street?.[0] || ''
+    })))
   }
 
 

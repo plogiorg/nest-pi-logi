@@ -85,6 +85,7 @@ export class AuthController {
   async getUsers(@Request() req: Request) {
     const { authorization } = req.headers as any;
     const [, accessToken] = authorization.split(' ');
-    await this.authService.getUsers(accessToken);
+    const users = await this.authService.getUsers(accessToken);
+    return { users }
   }
 }
