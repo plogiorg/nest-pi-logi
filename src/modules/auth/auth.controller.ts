@@ -76,7 +76,7 @@ export class AuthController {
     await this.authService.logout(refreshToken);
   }
 
-  @Post({
+  @Get({
     path: "/users",
     description: "",
     model: null,

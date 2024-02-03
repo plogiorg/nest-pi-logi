@@ -51,6 +51,7 @@ export class KeycloakService {
                     client_id: this.clientId,
                     client_secret: this.clientSecret,
                     grant_type: 'password',
+                    scope: 'openid',
                     username,
                     password,
                 }),
