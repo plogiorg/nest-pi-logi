@@ -19,7 +19,7 @@ services:
         DB_VENDOR: POSTGRES
         DB_ADDR: postgres
         DB_PORT: 5442
-        DB_DATABASE: keycloak
+        DB_DATABASE: keycloak_db
         DB_USER: keycloak
         DB_PASSWORD: keycloak
       command: start-dev
