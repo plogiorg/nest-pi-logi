@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db": "docker-compose up -d",
+    "db": "docker compose up -d",
     "db:generate": "echo 'Enter migration name: ' && read migrationName && npx typeorm migration:generate -d dist/core/database/config.js src/migrations/$migrationName",
     "db:migrate": "npx typeorm migration:run -d dist/core/database/config.js"
   },
