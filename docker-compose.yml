@@ -12,7 +12,7 @@ services:
       - POSTGRES_DB=base_db
 
   keycloak:
-      image: quay.io/keycloak/keycloak
+      image: quay.io/keycloak/keycloak:20.0
       environment:
         KEYCLOAK_ADMIN: admin
         KEYCLOAK_ADMIN_PASSWORD: admin
