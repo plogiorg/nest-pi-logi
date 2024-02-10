@@ -3,7 +3,7 @@ services:
   db:
     image: postgres
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -16,6 +16,10 @@ services:
       environment:
         KEYCLOAK_ADMIN: admin
         KEYCLOAK_ADMIN_PASSWORD: admin
+        #Hostname Configuration
+        KC_PROXY: edge
+        KC_HOSTNAME: "sso.plogi.app"
+        KC_HOSTNAME_STRICT_HTTPS: 'false'
         DB_VENDOR: POSTGRES
         DB_ADDR: postgres
         DB_PORT: 5442
