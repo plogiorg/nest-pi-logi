@@ -1,6 +1,8 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 
 import { KeycloakService } from './keycloak.service';
+import { LoginRequestDTO } from "./dto/request";
+import { UserType } from "./types/AuthTypes";
 
 type LoginResponse = {
   access_token: string;
@@ -15,9 +17,9 @@ export class AuthService {
 
   constructor(private readonly keycloakService: KeycloakService) {}
 
-  async login(username: string, password: string): Promise<LoginResponse> {
+  async login(data:LoginRequestDTO): Promise<LoginResponse> {
     const { access_token, expires_in, refresh_token, refresh_expires_in } =
-      await this.keycloakService.login(username, password).catch(({response}) => {
+      await this.keycloakService.login(data.username, data.password, data.type).catch(({response}) => {
         throw new UnauthorizedException(response?.data?.error_description || "");
       });
 
@@ -29,16 +31,17 @@ export class AuthService {
     };
   }
 
-  async getProfile(accessToken: string) {
+  async getProfile(accessToken: string, type:UserType) {
     this.logger.log('Getting user profile...');
-    return this.keycloakService.getUserInfo(accessToken).catch((error) => {
+    return this.keycloakService.getUserInfo(accessToken, type).catch((error) => {
       throw new UnauthorizedException();
     });
   }
 
   async getUsers(accessToken: string) {
     this.logger.log('Getting user list...');
-    const users = await this.keycloakService.getUsers(accessToken).catch((error) => {
+    const users = await this.keycloakService.getAllUsers(accessToken).catch((error) => {
+      console.log({error});
       throw new UnauthorizedException();
     });
     return users.map((user =>({
@@ -46,7 +49,7 @@ export class AuthService {
       username: user.username,
       name: user.name,
       email: user.email,
-      type: "YourType",
+      type: user.type,
       active: user.enabled,
       phone: user.attributes?.phone?.[0] || '',
       country: user.attributes?.country?.[0] || '' ,
@@ -55,9 +58,9 @@ export class AuthService {
   }
 
 
-  async refreshToken(refreshToken: string): Promise<LoginResponse> {
+  async refreshToken(refreshToken: string, type:UserType): Promise<LoginResponse> {
     const { access_token, expires_in, refresh_token, refresh_expires_in } =
-      await this.keycloakService.refreshToken(refreshToken).catch(() => {
+      await this.keycloakService.refreshToken(refreshToken, type).catch(() => {
         throw new UnauthorizedException();
       });
 
@@ -69,8 +72,8 @@ export class AuthService {
     };
   }
 
-  async logout(refreshToken: string) {
-    await this.keycloakService.logout(refreshToken).catch(() => {
+  async logout(refreshToken: string, type:UserType) {
+    await this.keycloakService.logout(refreshToken, type).catch(() => {
       throw new UnauthorizedException();
     });
   }

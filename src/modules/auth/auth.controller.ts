@@ -7,18 +7,11 @@ import {
 import { Controller, Get, Post, Put } from "src/core/decorators";
 
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import {CreateServiceTypeResponseDTO} from "../services/dto/response";
-import {LoginRequestDTO} from "./dto/request";
+import { LoginRequestDTO, LogoutRequestDTO, RefreshTokenRequestDTO } from "./dto/request";
+import { AuthGuard } from "../../core/guards/auth.guard";
+import { UserInfoResponse } from "./types/AuthTypes";
 
 
-type RefreshTokenRequestBody = {
-  refresh_token: string;
-};
-
-type LogoutRequestBody = {
-  refresh_token: string;
-};
 
 @Controller({
   group: "Auth",
@@ -35,22 +28,17 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   login(@Body() body: LoginRequestDTO) {
-    const { username, password } = body;
-    return this.authService.login(username, password);
+    return this.authService.login(body);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   @Get({
     path: "/me",
     description: "",
     model: null,
   })
-  getProfile(@Request() req: Request) {
-    const { authorization } = req.headers as any;
-    console.log({authorization})
-    const [, accessToken] = authorization.split(' ');
-
-    return this.authService.getProfile(accessToken);
+  getProfile(@Request() req: Request & {user:UserInfoResponse}) {
+    return req.user
   }
 
   @Post({
@@ -59,10 +47,9 @@ export class AuthController {
     model: null,
   })
   @HttpCode(HttpStatus.OK)
-  refreshToken(@Body() body: RefreshTokenRequestBody) {
-    const { refresh_token: refreshToken } = body;
-
-    return this.authService.refreshToken(refreshToken);
+  refreshToken(@Body() body: RefreshTokenRequestDTO) {
+    const { refreshToken, type} = body;
+    return this.authService.refreshToken(refreshToken, type);
   }
 
   @Post({
@@ -71,21 +58,19 @@ export class AuthController {
     model: null,
   })
   @HttpCode(HttpStatus.OK)
-  async logout(@Body() body: LogoutRequestBody) {
-    const { refresh_token: refreshToken } = body;
-    await this.authService.logout(refreshToken);
+  async logout(@Body() data: LogoutRequestDTO) {
+    await this.authService.logout(data.accessToken, data.type);
   }
 
+  @UseGuards(AuthGuard)
   @Get({
     path: "/users",
     description: "",
     model: null,
   })
   @HttpCode(HttpStatus.OK)
-  async getUsers(@Request() req: Request) {
-    const { authorization } = req.headers as any;
-    const [, accessToken] = authorization.split(' ');
-    const users = await this.authService.getUsers(accessToken);
+  async getUsers(@Request() req: Request & {token:string}) {
+    const users = await this.authService.getUsers(req.token);
     return { users }
   }
 }

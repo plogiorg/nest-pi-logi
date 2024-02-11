@@ -2,64 +2,40 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { firstValueFrom } from "rxjs";
 import CONFIG from "../../config";
+import { LoginResponse, UserInfoResponse, UserListResponse, UserType } from "./types/AuthTypes";
 
-type LoginResponse = {
-  access_token: string;
-  scope: string;
-  refresh_token: string;
-  token_type: string;
-  session_state: string;
-  "not-before-policy": number;
-  refresh_expires_in: number;
-  expires_in: number;
-};
-
-type UserInfoResponse = {
-  sub: string;
-  email_verified: boolean;
-  preferred_username: string;
-};
-
-type UserListResponse = {
-  sub: string,
-  createdTimestamp: number,
-  username: string,
-  name: string,
-  type: string,
-  enabled: boolean,
-  email: boolean,
-  phoneNumber: string,
-  address: string,
-  attributes: {
-    phone: string[],
-    country: string[],
-    street: string[],
-  },
-};
 
 @Injectable()
 export class KeycloakService {
   private readonly baseURL: string;
-  private readonly realm: string;
-  private readonly clientId: string;
-  private readonly clientSecret: string;
 
   constructor(
     private readonly httpService: HttpService,
   ) {
     this.baseURL = CONFIG.KEYCLOAK.BASE_URL;
-    this.realm = CONFIG.KEYCLOAK.REALM;
-    this.clientId = CONFIG.KEYCLOAK.CLIENT_ID;
-    this.clientSecret = CONFIG.KEYCLOAK.CLIENT_SECRET;
   }
 
-  async login(username: string, password: string): Promise<LoginResponse> {
+  private getRealmConfiguration(type:UserType){
+    switch (type) {
+      case UserType.ADMIN:
+        return CONFIG.KEYCLOAK.ADMIN
+      case UserType.PROVIDER:
+        return CONFIG.KEYCLOAK.PROVIDER
+      case UserType.USER:
+        return CONFIG.KEYCLOAK.USER
+      default:
+        return CONFIG.KEYCLOAK.USER
+    }
+  }
+
+  async login(username: string, password: string, type:UserType): Promise<LoginResponse> {
+    const realmConfig = this.getRealmConfiguration(type)
     const { data } = await firstValueFrom(
       this.httpService.post(
-        `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/token`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/token`,
         new URLSearchParams({
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          client_id: realmConfig.CLIENT_ID,
+          client_secret: realmConfig.CLIENT_SECRET,
           grant_type: "password",
           scope: "openid",
           username,
@@ -71,13 +47,15 @@ export class KeycloakService {
 
   }
 
-  async signup(username: string, password: string): Promise<any> {
+  async signup(username: string, password: string, type:UserType): Promise<any> {
+    const realmConfig = this.getRealmConfiguration(type)
+
     const { data } = await firstValueFrom(
       this.httpService.post(
-        `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/registrations`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/registrations`,
         {
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          client_id: realmConfig.CLIENT_ID,
+          client_secret: realmConfig.CLIENT_SECRET,
           username,
           password,
           grant_type: "password",
@@ -88,10 +66,11 @@ export class KeycloakService {
     return data;
   }
 
-  async getUserInfo(accessToken: string): Promise<UserInfoResponse> {
+  async getUserInfo(accessToken: string, type:UserType): Promise<UserInfoResponse> {
+    const realmConfig = this.getRealmConfiguration(type)
     const { data } = await firstValueFrom(
       this.httpService.get(
-        `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/userinfo`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -99,14 +78,15 @@ export class KeycloakService {
         },
       ),
     );
-    console.log({ data });
     return data;
   }
 
   async getUsers(accessToken: string): Promise<UserListResponse[]> {
+    const allUsers: UserListResponse[] = [];
+
     const { data } = await firstValueFrom(
       this.httpService.get(
-        `${this.baseURL}/admin/realms/${this.realm}/users`,
+        `${this.baseURL}/admin/realms/${CONFIG.KEYCLOAK.ADMIN.REALM}/users`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -117,13 +97,56 @@ export class KeycloakService {
     return data;
   }
 
-  async refreshToken(refreshToken: string): Promise<LoginResponse> {
+  async getAllUsers(accessToken:string): Promise<UserListResponse[]> {
+    try {
+      const allUsers: UserListResponse[] = [];
+      const { BASE_URL, ...realmConfigs } =  CONFIG.KEYCLOAK
+      // Iterate through each realm configuration and fetch users
+      for (const realmConfigKey of Object.keys(realmConfigs)) {
+        const realmConfig = realmConfigs[realmConfigKey];
+        const realmName = realmConfig.REALM
+        if(realmName){
+          const users = await this.getUsersForRealm(realmName, accessToken, realmConfigKey);
+          if(users)
+          allUsers.push(...users);
+        }
+      }
+
+      return allUsers;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private async getUsersForRealm(realm: string, accessToken:string, userType:string): Promise<any> {
+    const usersUrl = `${this.baseURL}/admin/realms/${realm}/users`;
+
+      const { data } = await firstValueFrom(
+        this.httpService.get(
+          usersUrl,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+        ),
+      );
+    return data.map((user) => {
+      user.type = userType.toLowerCase();
+      return user;
+    });
+
+
+  }
+
+  async refreshToken(refreshToken: string, type:UserType): Promise<LoginResponse> {
+    const realmConfig = this.getRealmConfiguration(type)
     const { data } = await firstValueFrom(
       this.httpService.post(
-        `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/token`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/token`,
         new URLSearchParams({
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          client_id: realmConfig.CLIENT_ID,
+          client_secret: realmConfig.CLIENT_SECRET,
           grant_type: "refresh_token",
           refresh_token: refreshToken,
         }),
@@ -134,13 +157,14 @@ export class KeycloakService {
   }
 
 
-  async logout(refreshToken: string) {
+  async logout(refreshToken: string, type:UserType) {
+    const realmConfig = this.getRealmConfiguration(type)
     await firstValueFrom(
       this.httpService.post(
-        `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/logout`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/logout`,
         new URLSearchParams({
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          client_id: realmConfig.CLIENT_ID,
+          client_secret: realmConfig.CLIENT_SECRET,
           refresh_token: refreshToken,
         }),
       ),

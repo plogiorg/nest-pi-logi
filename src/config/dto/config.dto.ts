@@ -23,11 +23,17 @@ export interface LoggingConfigDTO {
     LEVEL: string,
 }
 
-export interface KeycloakConfigDTO {
-    BASE_URL :string,
+interface KeycloakRealmConfig {
     REALM:string,
     CLIENT_ID: string,
     CLIENT_SECRET :string,
+}
+
+export interface KeycloakConfigDTO {
+    BASE_URL :string,
+    ADMIN: KeycloakRealmConfig,
+    PROVIDER: KeycloakRealmConfig,
+    USER: KeycloakRealmConfig,
 }
 
 
