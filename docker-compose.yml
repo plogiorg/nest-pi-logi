@@ -2,56 +2,72 @@ version: '3.8'
 services:
   db:
     image: postgres
+    environment:
+      POSTGRES_DB: base_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=base_db
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   keycloak:
-      image: quay.io/keycloak/keycloak:20.0
-      environment:
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-        #Hostname Configuration
-        KC_PROXY: edge
-        KC_HOSTNAME: "sso.plogi.app"
-        KC_HOSTNAME_STRICT_HTTPS: 'false'
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_PORT: 5442
-        DB_DATABASE: keycloak_db
-        DB_USER: keycloak
-        DB_PASSWORD: keycloak
-      command: start-dev
-      ports:
-        - "9090:8080"
-      depends_on:
-        - keycloak_db
+    image: quay.io/keycloak/keycloak:20.0
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      #Hostname Configuration
+      KC_PROXY: edge
+      KC_HOSTNAME: "sso.plogi.app"
+      KC_HOSTNAME_STRICT_HTTPS: 'false'
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_PORT: 5442
+      DB_DATABASE: keycloak_db
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    command: start-dev
+    ports:
+      - "9090:8080"
+    depends_on:
+      - keycloak_db
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   keycloak_db:
-        image: postgres
-        environment:
-          POSTGRES_DB: keycloak
-          POSTGRES_USER: keycloak
-          POSTGRES_PASSWORD: keycloak
-        ports:
-          - "5442:5432"
-        volumes:
-          - pi-pgdata:/var/lib/postgresql/data
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - "5442:5432"
+    volumes:
+      - ../docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - pi-pgdata:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
   redis:
-      image: redis
-      ports:
-        - "6380:6379"
-      volumes:
-        - pi-redis-data:/data
+    image: redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - pi-redis-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
 volumes:
   pgdata:
   pi-pgdata:
   pi-redis-data:
-
-
-
