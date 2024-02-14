@@ -27,6 +27,7 @@ interface KeycloakRealmConfig {
     REALM:string,
     CLIENT_ID: string,
     CLIENT_SECRET :string,
+    ADMIN_CLI_SECRET?: string
 }
 
 export interface KeycloakConfigDTO {

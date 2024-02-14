@@ -39,3 +39,7 @@ export type UserListResponse = {
 };
 
 
+export class UserCredentials {
+  type: string;
+  value: string
+}

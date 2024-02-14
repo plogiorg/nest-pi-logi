@@ -21,4 +21,6 @@ export const configSchema = Joi.object({
   KEYCLOAK_USER_REALM: Joi.string().required(),
   KEYCLOAK_USER_CLIENT_ID: Joi.string().required(),
   KEYCLOAK_USER_CLIENT_SECRET: Joi.string().required(),
+  KEYCLOAK_PROVIDER_ADMIN_CLIENT_SECRET: Joi.string().required(),
+  KEYCLOAK_USER_ADMIN_CLIENT_SECRET: Joi.string().required(),
 });

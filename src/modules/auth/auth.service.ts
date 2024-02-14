@@ -1,8 +1,9 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 
 import { KeycloakService } from './keycloak.service';
-import { LoginRequestDTO } from "./dto/request";
-import { UserType } from "./types/AuthTypes";
+import { KeycloakSignupRequestDTO, LoginRequestDTO, SignupRequestDTO } from "./dto/request";
+import { UserCredentials, UserType } from "./types/AuthTypes";
+import { mergeDataIntoDTO } from "../../utils/utils.";
 
 type LoginResponse = {
   access_token: string;
@@ -29,6 +30,21 @@ export class AuthService {
       expires_in,
       refresh_expires_in,
     };
+  }
+
+  async signup(data:SignupRequestDTO, type:UserType) {
+    const credentials :UserCredentials[] = [{
+      type:"password",
+      value:data.password
+    }]
+    //TODO: refactor this mess
+    delete data.password
+    delete data.country
+    const keycloakSignupRequestDTO = new KeycloakSignupRequestDTO({...data})
+    keycloakSignupRequestDTO.credentials = credentials
+    await this.keycloakService.signup(keycloakSignupRequestDTO, type).catch((error) => {
+      throw new UnauthorizedException(error.response);
+    });
   }
 
   async getProfile(accessToken: string, type:UserType) {

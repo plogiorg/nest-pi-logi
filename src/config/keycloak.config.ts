@@ -12,10 +12,13 @@ export default {
         REALM: process.env.KEYCLOAK_USER_REALM,
         CLIENT_ID: process.env.KEYCLOAK_USER_CLIENT_ID,
         CLIENT_SECRET: process.env.KEYCLOAK_USER_CLIENT_SECRET,
+        ADMIN_CLI_SECRET: process.env.KEYCLOAK_USER_ADMIN_CLIENT_SECRET
+
     },
     PROVIDER: {
         REALM: process.env.KEYCLOAK_PROVIDER_REALM,
         CLIENT_ID: process.env.KEYCLOAK_PROVIDER_CLIENT_ID,
         CLIENT_SECRET: process.env.KEYCLOAK_PROVIDER_CLIENT_SECRET,
+        ADMIN_CLI_SECRET: process.env.KEYCLOAK_PROVIDER_ADMIN_CLIENT_SECRET
     },
 } as KeycloakConfigDTO;

@@ -7,13 +7,12 @@ export default class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
-
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
 
       if (status === HttpStatus.BAD_REQUEST) {
         return response.status(status).json({
-          message: exception.message,
+          message: exception["response"].message,
           error: exception?.['options']?.description
             ? JSON.parse(exception['options'].description)
             : undefined,

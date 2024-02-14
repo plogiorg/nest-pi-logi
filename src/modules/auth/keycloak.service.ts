@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { firstValueFrom } from "rxjs";
 import CONFIG from "../../config";
 import { LoginResponse, UserInfoResponse, UserListResponse, UserType } from "./types/AuthTypes";
+import { KeycloakSignupRequestDTO } from "./dto/request";
 
 
 @Injectable()
@@ -44,22 +45,33 @@ export class KeycloakService {
       ),
     );
     return data;
-
   }
 
-  async signup(username: string, password: string, type:UserType): Promise<any> {
+  private async getAdminToken(type:UserType){
     const realmConfig = this.getRealmConfiguration(type)
-
     const { data } = await firstValueFrom(
       this.httpService.post(
-        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/registrations`,
+        `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/token`,
+        new URLSearchParams({
+          client_id: "admin-cli",
+          client_secret: "Pv0YZaC2Dzr6pJFrpi77ln6bgfVf3hxH",
+          grant_type: "client_credentials",
+        }),
+      ),
+    );
+    return data;
+  }
+  async signup(keycloakSignupRequestDTO:KeycloakSignupRequestDTO, type:UserType): Promise<any> {
+    const realmConfig = this.getRealmConfiguration(type)
+    const token = await this.getAdminToken(type)
+    console.log({token});
+    const { data } = await firstValueFrom(
+      this.httpService.post(
+        `${this.baseURL}/admin/realms/${realmConfig.REALM}/users`,
         {
-          client_id: realmConfig.CLIENT_ID,
-          client_secret: realmConfig.CLIENT_SECRET,
-          username,
-          password,
-          grant_type: "password",
+          ...keycloakSignupRequestDTO,
         },
+        {headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token.access_token}`}}
       ),
     );
 
@@ -120,7 +132,6 @@ export class KeycloakService {
 
   private async getUsersForRealm(realm: string, accessToken:string, userType:string): Promise<any> {
     const usersUrl = `${this.baseURL}/admin/realms/${realm}/users`;
-
       const { data } = await firstValueFrom(
         this.httpService.get(
           usersUrl,
