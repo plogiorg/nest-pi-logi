@@ -1,16 +1,16 @@
-import { HttpCode, HttpStatus } from '@nestjs/common';
-import {
-  Body,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { Controller, Get, Post, Put } from "src/core/decorators";
+import { Body, HttpCode, HttpStatus, Param, Request, UseGuards, ValidationPipe } from "@nestjs/common";
+import { Controller, Get, Post } from "src/core/decorators";
 
-import { AuthService } from './auth.service';
-import { LoginRequestDTO, LogoutRequestDTO, RefreshTokenRequestDTO } from "./dto/request";
+import { AuthService } from "./auth.service";
+import {
+  LoginRequestDTO,
+  LogoutRequestDTO,
+  RefreshTokenRequestDTO,
+  SignupParam,
+  SignupRequestDTO,
+} from "./dto/request";
 import { AuthGuard } from "../../core/guards/auth.guard";
 import { UserInfoResponse } from "./types/AuthTypes";
-
 
 
 @Controller({
@@ -29,6 +29,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() body: LoginRequestDTO) {
     return this.authService.login(body);
+  }
+
+
+  @Post({
+    path: "/:userType/signup/",
+    description: "",
+    model: SignupRequestDTO,
+  })
+  signup(@Body() body: SignupRequestDTO, @Param() params: SignupParam) {
+    console.log({ params });
+    return this.authService.signup(body, params.userType);
   }
 
   @UseGuards(AuthGuard)
