@@ -37,7 +37,7 @@ export class GetServiceTypesResponseDTO {
     isArray: true,
     type: ServiceTypeResponse,
   })
-  services: ServiceTypeResponse[];
+  types: ServiceTypeResponse[];
 }
 
 export class CreateServiceTypeResponseDTO {

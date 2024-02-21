@@ -28,12 +28,19 @@ export default class ServiceService {
     async createService(data: CreateServiceRequestDTO){
         const serviceTypeEntity = await this._serviceTypeEntity.findOneOrFail({where: {id:data.serviceTypeId}});
         const service = new ServiceEntity()
+        service.serviceType = serviceTypeEntity
         Object.assign(service, data)
         return this._serviceEntity.save(service)
     }
 
     async getService(serviceId: number):Promise<GetServiceResponseDTO>{
         const serviceEntity = await this._serviceEntity.findOneOrFail({where: {id:serviceId}});
+        const serviceResponse  = new ServiceResponse()
+        return {service: Object.assign(serviceResponse, serviceEntity)}
+    }
+
+    async getProviderServices(providerId: string):Promise<GetServiceResponseDTO>{
+        const serviceEntity = await this._serviceEntity.findOneOrFail({where: {userId:providerId}});
         const serviceResponse  = new ServiceResponse()
         return {service: Object.assign(serviceResponse, serviceEntity)}
     }
@@ -60,8 +67,8 @@ export default class ServiceService {
 
 
     async getServiceTypes(): Promise<GetServiceTypesResponseDTO> {
-        const services = await this._serviceTypeEntity.find();
-        return { services };
+        const types = await this._serviceTypeEntity.find();
+        return { types };
     }
 
 

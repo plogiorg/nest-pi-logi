@@ -1,4 +1,4 @@
-import { Body, Param } from "@nestjs/common";
+import { Body, Param, Request } from "@nestjs/common";
 import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
     CreateServiceRequestDTO,
@@ -12,6 +12,7 @@ import {
     GetServiceTypesResponseDTO,
     UpdateServiceTypeResponseDTO,
 } from "./dto/response";
+import { UserInfoResponse } from "../auth/types/AuthTypes";
 
 @Controller({
     group: "Service",
@@ -33,7 +34,7 @@ export default class ServiceController {
 
     @Post({
         path: "/types",
-        description: "Create a new Service",
+        description: "Create a new Service Type",
         model: CreateServiceTypeResponseDTO,
     })
     createServiceType(@Body() data: CreateServiceTypeRequestDTO) {
@@ -79,7 +80,16 @@ export default class ServiceController {
         return this._serviceService.getService(id);
     }
 
-    @Patch({
+  @Get({
+    path: "/provider/",
+    description: "get Provider Services",
+    model: GetServiceResponseDTO,
+  })
+  getProviderServices(@Request() req: Request & {user:UserInfoResponse}) {
+    return this._serviceService.getProviderServices(req.user.sub);
+  }
+
+  @Patch({
         path: "/:id",
         description: "Update Service",
         model: GetServiceResponseDTO,

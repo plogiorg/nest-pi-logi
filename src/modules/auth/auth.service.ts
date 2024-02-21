@@ -3,7 +3,6 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { KeycloakService } from './keycloak.service';
 import { KeycloakSignupRequestDTO, LoginRequestDTO, SignupRequestDTO } from "./dto/request";
 import { UserCredentials, UserType } from "./types/AuthTypes";
-import { mergeDataIntoDTO } from "../../utils/utils.";
 
 type LoginResponse = {
   access_token: string;
@@ -43,6 +42,7 @@ export class AuthService {
     const keycloakSignupRequestDTO = new KeycloakSignupRequestDTO({...data})
     keycloakSignupRequestDTO.credentials = credentials
     await this.keycloakService.signup(keycloakSignupRequestDTO, type).catch((error) => {
+      console.log({error});
       throw new UnauthorizedException(error.response);
     });
   }

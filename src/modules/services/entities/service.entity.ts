@@ -1,5 +1,6 @@
 import BaseEntity from "src/core/entity/base.entity";
-import { Column, Entity, Index } from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToOne } from "typeorm";
+import ServiceTypeEntity from "./service.type.entity";
 
 
 @Entity("services")
@@ -25,5 +26,14 @@ export default class ServiceEntity extends BaseEntity {
     type: "boolean"
   })
   isDeleted: boolean;
+
+  @JoinColumn({ name: "service_type_id", })
+  @OneToOne(() => ServiceTypeEntity)
+  serviceType: ServiceTypeEntity;
+
+  @Column({
+    name: "service_type_id",
+  })
+  serviceTypeId: string;
 
 }

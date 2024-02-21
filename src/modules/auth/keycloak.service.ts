@@ -54,7 +54,7 @@ export class KeycloakService {
         `${this.baseURL}/realms/${realmConfig.REALM}/protocol/openid-connect/token`,
         new URLSearchParams({
           client_id: "admin-cli",
-          client_secret: "Pv0YZaC2Dzr6pJFrpi77ln6bgfVf3hxH",
+          client_secret: realmConfig.ADMIN_CLI_SECRET,
           grant_type: "client_credentials",
         }),
       ),
@@ -64,12 +64,12 @@ export class KeycloakService {
   async signup(keycloakSignupRequestDTO:KeycloakSignupRequestDTO, type:UserType): Promise<any> {
     const realmConfig = this.getRealmConfiguration(type)
     const token = await this.getAdminToken(type)
-    console.log({token});
     const { data } = await firstValueFrom(
       this.httpService.post(
         `${this.baseURL}/admin/realms/${realmConfig.REALM}/users`,
         {
           ...keycloakSignupRequestDTO,
+          enabled:true
         },
         {headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token.access_token}`}}
       ),
