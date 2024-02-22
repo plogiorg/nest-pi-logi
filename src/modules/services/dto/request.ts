@@ -42,6 +42,22 @@ export class CreateServiceRequestDTO {
   @ApiProperty()
   @IsNumber()
   price:number;
+
+  @ApiProperty()
+  @IsNumber()
+  lan:number;
+
+  @ApiProperty()
+  @IsNumber()
+  lat:number;
+
+  @ApiProperty()
+  @IsString()
+  city:string;
+
+  @ApiProperty()
+  @IsString()
+  address:string;
 }
 
 export class UpdateServiceRequestDTO {
@@ -64,4 +80,20 @@ export class UpdateServiceRequestDTO {
   @ApiProperty()
   @IsNumber()
   price:number;
+
+  @ApiProperty()
+  @IsNumber()
+  lan:number;
+
+  @ApiProperty()
+  @IsNumber()
+  lat:number;
+
+  @ApiProperty()
+  @IsString()
+  city:string;
+
+  @ApiProperty()
+  @IsString()
+  address:string;
 }

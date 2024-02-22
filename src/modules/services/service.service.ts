@@ -45,6 +45,7 @@ export default class ServiceService {
         return {service: Object.assign(serviceResponse, serviceEntity)}
     }
 
+
     async updateService(serviceId:number, data: UpdateServiceRequestDTO):Promise<ServiceResponse>{
         const serviceEntity = await this._serviceEntity.findOneOrFail({where: {id:serviceId}});
         const updatedService = Object.assign(serviceEntity, data)

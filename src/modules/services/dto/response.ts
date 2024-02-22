@@ -30,6 +30,18 @@ export class ServiceResponse {
 
   @ApiProperty()
   price: number;
+
+  @ApiProperty()
+  lan: number;
+
+  @ApiProperty()
+  lat: number;
+
+  @ApiProperty()
+  city: string;
+
+  @ApiProperty()
+  address: string;
 }
 
 export class GetServiceTypesResponseDTO {

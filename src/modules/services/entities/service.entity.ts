@@ -36,4 +36,28 @@ export default class ServiceEntity extends BaseEntity {
   })
   serviceTypeId: string;
 
+  @Column({
+    name: "longitude",
+    default: 0
+  })
+  lan:number
+
+  @Column({
+    name: "longitude",
+    default: 0
+  })
+  lat: number
+
+  @Column({
+    name: "city",
+    nullable: true
+  })
+  city: string
+
+  @Column({
+    name: "address",
+    nullable: true
+  })
+  address: string
+
 }
