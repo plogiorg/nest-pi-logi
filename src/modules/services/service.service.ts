@@ -25,11 +25,11 @@ export default class ServiceService {
         private _serviceEntity: Repository<ServiceEntity>
     ) {}
 
-    async createService(data: CreateServiceRequestDTO){
+    async createService(data: CreateServiceRequestDTO, userId:string){
         const serviceTypeEntity = await this._serviceTypeEntity.findOneOrFail({where: {id:data.serviceTypeId}});
         const service = new ServiceEntity()
         service.serviceType = serviceTypeEntity
-        Object.assign(service, data)
+        Object.assign(service, { ...data, userId })
         return this._serviceEntity.save(service)
     }
 

@@ -4,9 +4,10 @@ import ServiceTypeEntity from "./entities/service.type.entity";
 import ServiceService from "./service.service";
 import ServiceController from "./service.controller";
 import ServiceEntity from "./entities/service.entity";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ServiceTypeEntity, ServiceEntity])],
+    imports: [TypeOrmModule.forFeature([ServiceTypeEntity, ServiceEntity]), AuthModule],
     exports: [ServiceService],
     providers: [ServiceService],
     controllers: [ServiceController],

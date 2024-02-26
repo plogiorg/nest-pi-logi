@@ -1,4 +1,4 @@
-import { Body, Param, Request } from "@nestjs/common";
+import { Body, Param, Request, UseGuards } from "@nestjs/common";
 import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
     CreateServiceRequestDTO,
@@ -13,6 +13,7 @@ import {
     UpdateServiceTypeResponseDTO,
 } from "./dto/response";
 import { UserInfoResponse } from "../auth/types/AuthTypes";
+import { AuthGuard } from "../../core/guards/auth.guard";
 
 @Controller({
     group: "Service",
@@ -67,8 +68,10 @@ export default class ServiceController {
         description: "Create a new Service",
         model: GetServiceResponseDTO,
     })
-    createService(@Body() data: CreateServiceRequestDTO) {
-        return this._serviceService.createService(data);
+    @UseGuards(AuthGuard)
+    createService(@Body() data: CreateServiceRequestDTO, @Request() req: Request & {user:UserInfoResponse}) {
+      console.log({req});
+        return this._serviceService.createService(data, req.user.sub);
     }
 
     @Get({

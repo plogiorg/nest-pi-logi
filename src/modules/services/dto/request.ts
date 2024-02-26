@@ -27,13 +27,6 @@ export class UpdateStatusRequestDTO {
 }
 
 export class CreateServiceRequestDTO {
-  @ApiProperty()
-  serviceTypeId:number;
-
-  @ApiProperty()
-  @IsString()
-  userId:string;
-
 
   @ApiProperty()
   @IsString()
@@ -58,6 +51,10 @@ export class CreateServiceRequestDTO {
   @ApiProperty()
   @IsString()
   address:string;
+
+  @ApiProperty()
+  @IsNumber()
+  serviceTypeId:number;
 }
 
 export class UpdateServiceRequestDTO {

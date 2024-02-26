@@ -1,5 +1,5 @@
 import BaseEntity from "src/core/entity/base.entity";
-import { Column, Entity, Index, JoinColumn, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import ServiceTypeEntity from "./service.type.entity";
 
 
@@ -23,12 +23,13 @@ export default class ServiceEntity extends BaseEntity {
 
   @Column({
     name: "is_deleted",
-    type: "boolean"
+    type: "boolean",
+    default: false
   })
   isDeleted: boolean;
 
-  @JoinColumn({ name: "service_type_id", })
-  @OneToOne(() => ServiceTypeEntity)
+  @JoinColumn({ name: "service_type_id" })
+  @ManyToOne(() => ServiceTypeEntity)
   serviceType: ServiceTypeEntity;
 
   @Column({
@@ -38,12 +39,14 @@ export default class ServiceEntity extends BaseEntity {
 
   @Column({
     name: "longitude",
+    type: "double precision",
     default: 0
   })
   lan:number
 
   @Column({
-    name: "longitude",
+    name: "latitude",
+    type: "double precision",
     default: 0
   })
   lat: number
