@@ -57,6 +57,28 @@ export class CreateServiceRequestDTO {
   serviceTypeId:number;
 }
 
+export class GetServiceParams{
+  @ApiPropertyOptional()
+  @IsOptional()
+  city: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  search: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  priceFrom: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  priceTo: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  sortBy:string
+}
+
 export class UpdateServiceRequestDTO {
   @ApiProperty()
   serviceTypeId:number;

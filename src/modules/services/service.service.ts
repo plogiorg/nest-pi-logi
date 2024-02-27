@@ -4,7 +4,7 @@ import { NotFoundException } from "src/core/exceptions";
 import { In, Repository } from "typeorm";
 import {
     CreateServiceRequestDTO,
-    CreateServiceTypeRequestDTO, UpdateServiceRequestDTO,
+    CreateServiceTypeRequestDTO, GetServiceParams, UpdateServiceRequestDTO,
     UpdateStatusRequestDTO,
 } from "./dto/request";
 import {
@@ -61,8 +61,38 @@ export default class ServiceService {
         return {success:true}
     }
 
-    async getServices(): Promise<GetServicesResponseDTO> {
-        const services = await this._serviceEntity.find();
+    async getServices(params: GetServiceParams): Promise<GetServicesResponseDTO> {
+        let query = this._serviceEntity.createQueryBuilder('service')
+
+        query = query.leftJoinAndSelect('service.serviceType', 'serviceType');
+
+
+        // Apply filtering based on provided parameters
+        if (params.city) {
+            query = query.where('service.city = :city', { city: params.city });
+        }
+
+        if (params.priceFrom && params.priceTo) {
+            query = query.andWhere('service.price BETWEEN :priceFrom AND :priceTo', {
+                priceFrom: params.priceFrom,
+                priceTo: params.priceTo,
+            });
+        }
+
+        if (params.search) {
+            query = query.andWhere(
+              '(service.city LIKE :search OR service.description LIKE :search)',
+              { search: `%${params.search}%` },
+            );
+        }
+
+        // Apply sorting based on the `sortBy` parameter, if provided
+        if (params.sortBy) {
+            query = query.orderBy(`service.${params.sortBy}`);
+        }
+
+        // Fetch services based on the constructed query
+        const services = await query.getMany();
         return { services };
     }
 

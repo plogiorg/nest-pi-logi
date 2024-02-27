@@ -1,9 +1,9 @@
-import { Body, Param, Request, UseGuards } from "@nestjs/common";
+import { Body, Param, Query, Request, UseGuards } from "@nestjs/common";
 import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
-    CreateServiceRequestDTO,
-    CreateServiceTypeRequestDTO, UpdateServiceRequestDTO,
-    UpdateStatusRequestDTO,
+  CreateServiceRequestDTO,
+  CreateServiceTypeRequestDTO, GetServiceParams, UpdateServiceRequestDTO,
+  UpdateStatusRequestDTO,
 } from "./dto/request";
 import ServiceService from "./service.service";
 import {
@@ -59,8 +59,8 @@ export default class ServiceController {
         description: "Get all services",
         model: GetServicesResponseDTO,
     })
-    getServices() {
-        return this._serviceService.getServices();
+    getServices(@Query() params: GetServiceParams) {
+        return this._serviceService.getServices(params);
     }
 
     @Post({
