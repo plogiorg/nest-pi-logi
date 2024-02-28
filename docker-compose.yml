@@ -1,20 +1,5 @@
 version: '3.8'
 services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_DB: base_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
     environment:
@@ -43,13 +28,18 @@ services:
   keycloak_db:
     image: postgres
     environment:
-      POSTGRES_DB: keycloak
+      POSTGRES_MULTIPLE_DATABASES: keycloak, base_db
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "5442:5432"
     volumes:
-      - ../docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - ./docker-postgresql-multiple-databases/entrypoint.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
       - pi-pgdata:/var/lib/postgresql/data
     deploy:
       resources:
@@ -68,6 +58,5 @@ services:
           memory: 256M
 
 volumes:
-  pgdata:
   pi-pgdata:
   pi-redis-data:
