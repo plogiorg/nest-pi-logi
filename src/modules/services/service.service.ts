@@ -40,7 +40,7 @@ export default class ServiceService {
     }
 
     async getProviderServices(providerId: string):Promise<GetServiceRsesponseDTO>{
-        const serviceEntity = await this._serviceEntity.find({where: {userId:providerId}});
+        const serviceEntity = await this._serviceEntity.find({where: {userId:providerId}, relations: { serviceType: true}});
         const serviceResponse  = []
         return {services: Object.assign(serviceResponse, serviceEntity)}
     }
