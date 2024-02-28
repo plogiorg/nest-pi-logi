@@ -75,6 +75,11 @@ export class GetServiceResponseDTO {
   service: ServiceResponse;
 }
 
+export class GetServiceRsesponseDTO {
+  @ApiProperty()
+  services: ServiceResponse[];
+}
+
 export class UpdateServiceResponseDTO {
   @ApiProperty()
   service: ServiceTypeResponse;

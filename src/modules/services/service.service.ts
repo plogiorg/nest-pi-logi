@@ -8,7 +8,7 @@ import {
     UpdateStatusRequestDTO,
 } from "./dto/request";
 import {
-    CreateServiceTypeResponseDTO, GetServiceResponseDTO, GetServicesResponseDTO,
+    CreateServiceTypeResponseDTO, GetServiceResponseDTO, GetServiceRsesponseDTO, GetServicesResponseDTO,
     GetServiceTypesResponseDTO, ServiceResponse, ServiceTypeResponse,
     UpdateServiceTypeResponseDTO,
 
@@ -39,10 +39,10 @@ export default class ServiceService {
         return {service: Object.assign(serviceResponse, serviceEntity)}
     }
 
-    async getProviderServices(providerId: string):Promise<GetServiceResponseDTO>{
-        const serviceEntity = await this._serviceEntity.findOneOrFail({where: {userId:providerId}});
-        const serviceResponse  = new ServiceResponse()
-        return {service: Object.assign(serviceResponse, serviceEntity)}
+    async getProviderServices(providerId: string):Promise<GetServiceRsesponseDTO>{
+        const serviceEntity = await this._serviceEntity.find({where: {userId:providerId}});
+        const serviceResponse  = []
+        return {services: Object.assign(serviceResponse, serviceEntity)}
     }
 
 
