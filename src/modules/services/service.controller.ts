@@ -74,17 +74,8 @@ export default class ServiceController {
         return this._serviceService.createService(data, req.user.sub);
     }
 
-    @Get({
-        path: "/:id",
-        description: "get Service",
-        model: GetServiceResponseDTO,
-    })
-    getService( @Param("id") id: number) {
-        return this._serviceService.getService(id);
-    }
-
   @Get({
-    path: "/provider/",
+    path: "/provider/services",
     description: "get Provider Services",
     model: GetServiceResponseDTO,
   })
@@ -92,6 +83,17 @@ export default class ServiceController {
   getProviderServices(@Request() req: Request & {user:UserInfoResponse}) {
     return this._serviceService.getProviderServices(req.user.sub);
   }
+
+
+  @Get({
+        path: "/:id",
+        description: "get Service",
+        model: GetServiceResponseDTO,
+    })
+    getService(@Param("id") id: number) {
+        return this._serviceService.getService(id);
+    }
+
 
   @Patch({
         path: "/:id",
