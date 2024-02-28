@@ -88,6 +88,7 @@ export default class ServiceController {
     description: "get Provider Services",
     model: GetServiceResponseDTO,
   })
+  @UseGuards(AuthGuard)
   getProviderServices(@Request() req: Request & {user:UserInfoResponse}) {
     return this._serviceService.getProviderServices(req.user.sub);
   }
