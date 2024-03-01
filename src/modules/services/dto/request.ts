@@ -76,6 +76,10 @@ export class GetServiceParams{
 
   @ApiPropertyOptional()
   @IsOptional()
+  typeId: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   sortBy:string
 }
 

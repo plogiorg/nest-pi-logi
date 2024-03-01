@@ -72,6 +72,10 @@ export default class ServiceService {
             query = query.where('service.city = :city', { city: params.city });
         }
 
+        if (params.typeId) {
+            query = query.where('service.serviceTypeId = :id', { city: params.typeId });
+        }
+
         if (params.priceFrom && params.priceTo) {
             query = query.andWhere('service.price BETWEEN :priceFrom AND :priceTo', {
                 priceFrom: params.priceFrom,
