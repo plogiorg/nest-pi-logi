@@ -95,7 +95,8 @@ export class AuthService {
   }
 
   async getUserDetail(id: string, type:UserType) {
-    await this.keycloakService.getUserDetail(id, type).catch(() => {
+    await this.keycloakService.getUserDetail(id, type).catch((error) => {
+      console.log({error});
       throw new UnauthorizedException();
     });
   }
