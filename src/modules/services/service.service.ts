@@ -45,6 +45,7 @@ export default class ServiceService {
         const serviceEntity = await this._serviceEntity.findOneOrFail({where: {id:serviceId}, relations:{serviceType: true}});
         const serviceResponse  = new ServiceDetailResponse()
         serviceResponse.userInfo = await this.authService.getUserDetail(serviceEntity.userId,UserType.PROVIDER)
+        console.log(serviceResponse.userInfo, "info");
         return {service: Object.assign(serviceResponse, serviceEntity)}
     }
 
