@@ -43,7 +43,7 @@ export class AuthService {
     keycloakSignupRequestDTO.credentials = credentials
     keycloakSignupRequestDTO.attributes = {phone: data.phone}
     await this.keycloakService.signup(keycloakSignupRequestDTO, type).catch((error) => {
-      console.log({error});
+      console.log(error.response);
       throw new UnauthorizedException(error.response);
     });
   }
