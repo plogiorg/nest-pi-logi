@@ -53,6 +53,9 @@ export class SignupRequestDTO {
     email: string;
 
 
+    @ApiProperty()
+    @IsString()
+    phone: string;
 
     @ApiProperty()
     @IsOptional()
@@ -90,6 +93,10 @@ export class KeycloakSignupRequestDTO {
     @IsOptional()
     @IsBoolean()
     enabled: boolean;
+
+    @ApiProperty()
+    @IsOptional()
+    attributes?: any;
 
 
     @ApiProperty()

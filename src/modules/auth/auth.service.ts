@@ -41,6 +41,7 @@ export class AuthService {
     delete data.country
     const keycloakSignupRequestDTO = new KeycloakSignupRequestDTO({...data})
     keycloakSignupRequestDTO.credentials = credentials
+    keycloakSignupRequestDTO.attributes = {phone: data.phone}
     await this.keycloakService.signup(keycloakSignupRequestDTO, type).catch((error) => {
       console.log({error});
       throw new UnauthorizedException(error.response);
