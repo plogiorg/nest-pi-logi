@@ -88,7 +88,6 @@ export class KeycloakSignupRequestDTO {
     email: string;
 
 
-
     @ApiProperty()
     @IsOptional()
     @IsBoolean()

@@ -36,12 +36,14 @@ export class AuthService {
       type:"password",
       value:data.password
     }]
+    const attributes :any = {phone: data.phone}
     //TODO: refactor this mess
     delete data.password
+    delete data.phone
     delete data.country
     const keycloakSignupRequestDTO = new KeycloakSignupRequestDTO({...data})
     keycloakSignupRequestDTO.credentials = credentials
-    keycloakSignupRequestDTO.attributes = {phone: data.phone}
+    keycloakSignupRequestDTO.attributes = attributes
     await this.keycloakService.signup(keycloakSignupRequestDTO, type).catch((error) => {
       console.log(error.response);
       throw new UnauthorizedException(error.response);
