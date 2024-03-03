@@ -44,6 +44,32 @@ export class ServiceResponse {
   address: string;
 }
 
+export class ServiceDetailResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  price: number;
+
+  @ApiProperty()
+  lan: number;
+
+  @ApiProperty()
+  lat: number;
+
+  @ApiProperty()
+  city: string;
+
+  @ApiProperty()
+  address: string;
+
+  @ApiProperty()
+  userInfo: any;
+
+}
 export class GetServiceTypesResponseDTO {
   @ApiProperty({
     isArray: true,
@@ -72,7 +98,7 @@ export class GetServicesResponseDTO {
 
 export class GetServiceResponseDTO {
   @ApiProperty()
-  service: ServiceResponse;
+  service: ServiceDetailResponse;
 }
 
 export class GetServiceRsesponseDTO {

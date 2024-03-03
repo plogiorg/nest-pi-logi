@@ -93,4 +93,10 @@ export class AuthService {
       throw new UnauthorizedException();
     });
   }
+
+  async getUserDetail(id: string, type:UserType) {
+    await this.keycloakService.getUserDetail(id, type).catch(() => {
+      throw new UnauthorizedException();
+    });
+  }
 }

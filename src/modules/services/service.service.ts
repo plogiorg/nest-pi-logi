@@ -1,20 +1,27 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { NotFoundException } from "src/core/exceptions";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import {
     CreateServiceRequestDTO,
-    CreateServiceTypeRequestDTO, GetServiceParams, UpdateServiceRequestDTO,
+    CreateServiceTypeRequestDTO,
+    GetServiceParams,
+    UpdateServiceRequestDTO,
     UpdateStatusRequestDTO,
 } from "./dto/request";
 import {
-    CreateServiceTypeResponseDTO, GetServiceResponseDTO, GetServiceRsesponseDTO, GetServicesResponseDTO,
-    GetServiceTypesResponseDTO, ServiceResponse, ServiceTypeResponse,
+    CreateServiceTypeResponseDTO,
+    GetServiceResponseDTO,
+    GetServiceRsesponseDTO,
+    GetServicesResponseDTO,
+    GetServiceTypesResponseDTO, ServiceDetailResponse,
+    ServiceResponse,
     UpdateServiceTypeResponseDTO,
-
 } from "./dto/response";
 import ServiceTypeEntity from "./entities/service.type.entity";
 import ServiceEntity from "./entities/service.entity";
+import { AuthService } from "../auth/auth.service";
+import { UserType } from "../auth/types/AuthTypes";
 
 @Injectable()
 export default class ServiceService {
@@ -22,7 +29,8 @@ export default class ServiceService {
         @InjectRepository(ServiceTypeEntity)
         private _serviceTypeEntity: Repository<ServiceTypeEntity>,
         @InjectRepository(ServiceEntity)
-        private _serviceEntity: Repository<ServiceEntity>
+        private _serviceEntity: Repository<ServiceEntity>,
+        private readonly authService: AuthService
     ) {}
 
     async createService(data: CreateServiceRequestDTO, userId:string){
@@ -34,8 +42,9 @@ export default class ServiceService {
     }
 
     async getService(serviceId: number):Promise<GetServiceResponseDTO>{
-        const serviceEntity = await this._serviceEntity.findOneOrFail({where: {id:serviceId}});
-        const serviceResponse  = new ServiceResponse()
+        const serviceEntity = await this._serviceEntity.findOneOrFail({where: {id:serviceId}, relations:{serviceType: true}});
+        const serviceResponse  = new ServiceDetailResponse()
+        serviceResponse.userInfo = await this.authService.getUserDetail(serviceEntity.userId,UserType.PROVIDER)
         return {service: Object.assign(serviceResponse, serviceEntity)}
     }
 

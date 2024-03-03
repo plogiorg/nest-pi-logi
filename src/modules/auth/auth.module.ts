@@ -11,6 +11,6 @@ import { AuthGuard } from "../../core/guards/auth.guard";
   imports: [HttpModule],
   controllers: [AuthController],
   providers: [AuthService, KeycloakService, JwtStrategy, AuthGuard],
-  exports: [KeycloakService]
+  exports: [KeycloakService, AuthService]
 })
 export class AuthModule {}
