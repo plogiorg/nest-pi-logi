@@ -88,8 +88,8 @@ export class KeycloakService {
           {headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token.access_token}`}}
         ),
       )
-      console.log({data});
-      return data;
+      console.log(data.data, "usersss");
+      return data.data;
     } catch (e) {
       console.log({e});
     }
