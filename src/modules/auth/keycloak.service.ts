@@ -79,16 +79,20 @@ export class KeycloakService {
   }
 
   async getUserDetail(id:string, type:UserType): Promise<any> {
-    const realmConfig = this.getRealmConfiguration(type)
-    const token = await this.getAdminToken(type)
-    const { data } = await firstValueFrom(
-      this.httpService.get(
-        `${this.baseURL}/admin/realms/${realmConfig.REALM}/users/${id}`,
-        {headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token.access_token}`}}
-      ),
-    )
+    try {
+      const realmConfig = this.getRealmConfiguration(type)
+      const token = await this.getAdminToken(type)
+      const { data } = await firstValueFrom(
+        this.httpService.get(
+          `${this.baseURL}/admin/realms/${realmConfig.REALM}/users/${id}`,
+          {headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token.access_token}`}}
+        ),
+      )
 
-    return data;
+      return data;
+    } catch (e) {
+      console.log({e});
+    }
   }
 
   async getUserInfo(accessToken: string, type:UserType): Promise<UserInfoResponse> {
