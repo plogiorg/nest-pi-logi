@@ -36,7 +36,7 @@ export class AuthService {
       type:"password",
       value:data.password
     }]
-    const attributes :any = {phone: data.phone}
+    const attributes :any = {phone: data.phone, country: data.country}
     //TODO: refactor this mess
     delete data.password
     delete data.phone

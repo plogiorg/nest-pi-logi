@@ -31,17 +31,17 @@ export class ServiceResponse {
   @ApiProperty()
   price: number;
 
-  @ApiProperty()
-  lan: number;
+  // @ApiProperty()
+  // lan: number;
+  //
+  // @ApiProperty()
+  // lat: number;
 
   @ApiProperty()
-  lat: number;
+  country: string;
 
-  @ApiProperty()
-  city: string;
-
-  @ApiProperty()
-  address: string;
+  // @ApiProperty()
+  // address: string;
 }
 
 export class ServiceDetailResponse {

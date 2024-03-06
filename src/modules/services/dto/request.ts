@@ -36,21 +36,21 @@ export class CreateServiceRequestDTO {
   @IsNumber()
   price:number;
 
-  @ApiProperty()
-  @IsNumber()
-  lan:number;
-
-  @ApiProperty()
-  @IsNumber()
-  lat:number;
-
-  @ApiProperty()
-  @IsString()
-  city:string;
+  // @ApiProperty()
+  // @IsNumber()
+  // lan:number;
+  //
+  // @ApiProperty()
+  // @IsNumber()
+  // lat:number;
 
   @ApiProperty()
   @IsString()
-  address:string;
+  country:string;
+
+  // @ApiProperty()
+  // @IsString()
+  // address:string;
 
   @ApiProperty()
   @IsNumber()
