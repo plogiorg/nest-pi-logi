@@ -125,16 +125,16 @@ export default class ServiceService {
         return { service };
     }
 
-    async toggleServiceTypeStatus(
+    async updateServiceType(
         id: number,
-        data: UpdateStatusRequestDTO
+        data: CreateServiceTypeRequestDTO
     ): Promise<UpdateServiceTypeResponseDTO> {
         const service = await this._serviceTypeEntity.findOne({ where: { id } });
         if (!service) {
             throw new NotFoundException("Service not found");
         }
-        service.isActive = data.isActive;
-        await this._serviceTypeEntity.save(service);
-        return { service };
+        const updatedService = Object.assign(service, data)
+        await this._serviceTypeEntity.save(updatedService);
+        return { service:updatedService };
     }
 }

@@ -48,9 +48,9 @@ export default class ServiceController {
         description: "Toggle a service's status",
         model: UpdateServiceTypeResponseDTO,
     })
-    updateServiceTypeStatus(@Body() data: UpdateStatusRequestDTO, @Param("id") id: number) {
+    updateServiceTypeStatus(@Body() data: CreateServiceTypeRequestDTO, @Param("id") id: number) {
         // TODO: restrict access to only admin
-        return this._serviceService.toggleServiceTypeStatus(id, data);
+        return this._serviceService.updateServiceType(id, data);
     }
 
 
