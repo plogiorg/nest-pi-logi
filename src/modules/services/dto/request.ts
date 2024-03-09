@@ -60,7 +60,7 @@ export class CreateServiceRequestDTO {
 export class GetServiceParams{
   @ApiPropertyOptional()
   @IsOptional()
-  city: string;
+  country: string;
 
   @ApiPropertyOptional()
   @IsOptional()
