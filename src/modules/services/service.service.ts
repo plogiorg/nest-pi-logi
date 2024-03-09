@@ -77,7 +77,7 @@ export default class ServiceService {
 
 
         // Apply filtering based on provided parameters
-        if (params.city) {
+        if (params.country) {
             query = query.where('service.country = :country', { country: `${params.country}` });
         }
 
