@@ -18,16 +18,20 @@ import {
     ServiceResponse,
     UpdateServiceTypeResponseDTO,
 } from "./dto/response";
-import ServiceTypeEntity from "./entities/service.type.entity";
+import ServiceTypeEntity from "./entities/service-type.entity";
 import ServiceEntity from "./entities/service.entity";
 import { AuthService } from "../auth/auth.service";
 import { UserType } from "../auth/types/AuthTypes";
+import PromoteOrderEntity from "./entities/promote-order.entity";
+import { OrderStatus } from "./types/types";
 
 @Injectable()
 export default class ServiceService {
     constructor(
         @InjectRepository(ServiceTypeEntity)
         private _serviceTypeEntity: Repository<ServiceTypeEntity>,
+        @InjectRepository(PromoteOrderEntity)
+        private _promoteOrderRepo: Repository<PromoteOrderEntity>,
         @InjectRepository(ServiceEntity)
         private _serviceEntity: Repository<ServiceEntity>,
         private readonly authService: AuthService
@@ -46,6 +50,14 @@ export default class ServiceService {
         const serviceResponse  = new ServiceDetailResponse()
         serviceResponse.userInfo = await this.authService.getUserDetail(serviceEntity.userId,UserType.PROVIDER)
         return {service: Object.assign(serviceResponse, serviceEntity)}
+    }
+
+    async getOrderByPaymentId(piPaymentId:string){
+        return this._promoteOrderRepo.findOne({where: {piPaymentId}})
+    }
+
+    async updateOrderByPaymentId(piPaymentId:string, newStatus:OrderStatus){
+        return this._promoteOrderRepo.update({piPaymentId},{status: newStatus})
     }
 
     async getProviderServices(providerId: string):Promise<GetServiceRsesponseDTO>{

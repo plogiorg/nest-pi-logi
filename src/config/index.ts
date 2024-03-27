@@ -17,6 +17,10 @@ const CONFIG = {
   DATABASE: { ...databaseConfig },
   LOGGING: { ...loggingConfig },
   KEYCLOAK: {... keycloakConfig},
+  PI: {
+    API_KEY: process.env.PI_API_KEY,
+    BASE_URL: process.env.PI_BASE_URL
+  }
 } as ConfigDTO;
 
 export default CONFIG;

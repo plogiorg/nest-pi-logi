@@ -1,6 +1,6 @@
 import BaseEntity from "src/core/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import ServiceTypeEntity from "./service.type.entity";
+import ServiceTypeEntity from "./service-type.entity";
 
 
 @Entity("services")
@@ -27,6 +27,13 @@ export default class ServiceEntity extends BaseEntity {
     default: false
   })
   isDeleted: boolean;
+
+  @Column({
+    name: "is_promoted",
+    type: "boolean",
+    default: false
+  })
+  isPromoted: boolean;
 
   @JoinColumn({ name: "service_type_id" })
   @ManyToOne(() => ServiceTypeEntity)

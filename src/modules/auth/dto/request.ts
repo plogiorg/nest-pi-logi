@@ -1,6 +1,7 @@
 import {ApiProperty} from "@nestjs/swagger";
 import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 import { UserCredentials, UserType } from "../types/AuthTypes";
+import { Type } from "class-transformer";
 
 export class LoginRequestDTO {
     @ApiProperty()
@@ -14,6 +15,30 @@ export class LoginRequestDTO {
     @ApiProperty()
     @IsEnum(UserType)
     type: UserType;
+}
+
+export class PiUser {
+    @ApiProperty()
+    @IsString()
+    uid:string;
+
+    @ApiProperty()
+    @IsString()
+    username:string;
+
+}
+export class PiLoginRequestDTO {
+    @ApiProperty()
+    @IsString()
+    accessToken: string;
+
+    @ApiProperty()
+    @IsEnum(UserType)
+    type: UserType
+
+    @ApiProperty()
+    @Type(() => PiUser)
+    user: PiUser;
 }
 
 export class RefreshTokenRequestDTO {

@@ -25,4 +25,6 @@ export default class ServiceTypeEntity extends BaseEntity {
         default: true,
     })
     isActive: boolean;
+
+
 }

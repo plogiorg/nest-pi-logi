@@ -1,8 +1,12 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 
 import { KeycloakService } from './keycloak.service';
-import { KeycloakSignupRequestDTO, LoginRequestDTO, SignupRequestDTO } from "./dto/request";
+import { KeycloakSignupRequestDTO, LoginRequestDTO, PiLoginRequestDTO, SignupRequestDTO } from "./dto/request";
 import { UserCredentials, UserType } from "./types/AuthTypes";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import TokenEntity from "./entities/token.entity";
+import { PiService } from "../pi/pi.service";
 
 type LoginResponse = {
   access_token: string;
@@ -15,7 +19,8 @@ type LoginResponse = {
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
-  constructor(private readonly keycloakService: KeycloakService) {}
+  constructor(private readonly keycloakService: KeycloakService, private readonly _piService: PiService,   @InjectRepository(TokenEntity)
+  private _tokenRepo: Repository<TokenEntity>,) {}
 
   async login(data:LoginRequestDTO): Promise<LoginResponse> {
     const { access_token, expires_in, refresh_token, refresh_expires_in } =
@@ -29,6 +34,21 @@ export class AuthService {
       expires_in,
       refresh_expires_in,
     };
+  }
+
+  async piNetworkLogin(data:PiLoginRequestDTO){
+    try {
+     await this._piService.getUserInfo(data.accessToken)
+    } catch (e) {
+      throw new UnauthorizedException(e, "invalid access token")
+    }
+     await this._tokenRepo.upsert({
+       access_token: data.accessToken,
+       username: data.user.username,
+       userType: data.type,
+       userId:data.user.uid
+     }, ["userId"])
+    return this._tokenRepo.findOne({where: {userId:data.user.uid}})
   }
 
   async signup(data:SignupRequestDTO, type:UserType) {

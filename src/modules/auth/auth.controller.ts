@@ -4,7 +4,7 @@ import { Controller, Get, Post } from "src/core/decorators";
 import { AuthService } from "./auth.service";
 import {
   LoginRequestDTO,
-  LogoutRequestDTO,
+  LogoutRequestDTO, PiLoginRequestDTO,
   RefreshTokenRequestDTO,
   SignupParam,
   SignupRequestDTO,
@@ -31,6 +31,15 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @Post({
+    path: "/pi/login",
+    description: "",
+    model: PiLoginRequestDTO,
+  })
+  @HttpCode(HttpStatus.OK)
+  piLogin(@Body() body: PiLoginRequestDTO) {
+    return this.authService.piNetworkLogin(body);
+  }
 
   @Post({
     path: "/:userType/signup/",

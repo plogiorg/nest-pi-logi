@@ -10,6 +10,7 @@ export interface ConfigDTO {
     DATABASE: DatabaseConfigDTO;
     LOGGING?: LoggingConfigDTO;
     KEYCLOAK: KeycloakConfigDTO;
+    PI:PiConfigDTO;
 }
 export interface DatabaseConfigDTO {
     HOST: string,
@@ -35,6 +36,12 @@ export interface KeycloakConfigDTO {
     ADMIN: KeycloakRealmConfig,
     PROVIDER: KeycloakRealmConfig,
     USER: KeycloakRealmConfig,
+}
+
+
+export interface PiConfigDTO {
+    BASE_URL :string,
+    API_KEY: string,
 }
 
 
