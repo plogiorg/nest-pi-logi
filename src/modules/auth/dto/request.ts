@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 import { UserCredentials, UserType } from "../types/AuthTypes";
 import { Type } from "class-transformer";
 
@@ -37,6 +37,7 @@ export class PiLoginRequestDTO {
     type: UserType
 
     @ApiProperty()
+    @ValidateNested()
     @Type(() => PiUser)
     user: PiUser;
 }
