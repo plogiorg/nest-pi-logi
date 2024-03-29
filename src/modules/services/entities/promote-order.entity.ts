@@ -5,7 +5,7 @@ import { OrderStatus } from "../types/types";
 
 
 
-@Entity("services_types")
+@Entity("promote_orders")
 export default class PromoteOrderEntity extends BaseEntity {
   @Column({
     name: "pi_payment_id",
