@@ -48,7 +48,7 @@ export class AuthService {
        username: data.user.username,
        userType: data.type,
        userId:data.user.uid
-     }, ["userId"])
+     }, {conflictPaths: { userId: true } })
     return this._tokenRepo.findOne({where: {userId:data.user.uid}})
   }
 
