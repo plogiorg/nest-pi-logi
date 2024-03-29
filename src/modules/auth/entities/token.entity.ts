@@ -11,7 +11,7 @@ export default class TokenEntity extends BaseEntity {
   @Column({name: "username"})
   username:string;
 
-  @Column({name: "user_id"})
+  @Column({name: "user_id", unique: true})
   userId:string;
 
   @Column({name: "user_type", type: "enum", enum: UserType, default: UserType.PROVIDER})
