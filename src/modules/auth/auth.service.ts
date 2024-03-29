@@ -39,10 +39,8 @@ export class AuthService {
 
   async piNetworkLogin(data:PiLoginRequestDTO){
     try {
-     const res = await this._piService.getUserInfo(data.accessToken)
-      console.log({res});
+     await this._piService.getUserInfo(data.accessToken)
     } catch (e) {
-      console.log({e});
       throw new UnauthorizedException("invalid access token")
     }
      await this._tokenRepo.upsert({
