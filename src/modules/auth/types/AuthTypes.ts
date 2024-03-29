@@ -4,6 +4,11 @@ export enum UserType {
   USER = 'user'
 }
 
+export enum AuthType {
+  PI = 'pi',
+  STANDARD = 'standard',
+}
+
 export type LoginResponse = {
   access_token: string;
   scope: string;
