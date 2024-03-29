@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { KeycloakService } from './keycloak.service';
 import { KeycloakSignupRequestDTO, LoginRequestDTO, PiLoginRequestDTO, SignupRequestDTO } from "./dto/request";
@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import TokenEntity from "./entities/token.entity";
 import { PiService } from "../pi/pi.service";
+import { UnauthorizedException } from "../../core/exceptions";
 
 type LoginResponse = {
   access_token: string;
@@ -41,7 +42,7 @@ export class AuthService {
      const res = await this._piService.getUserInfo(data.accessToken)
       console.log({res});
     } catch (e) {
-      throw new UnauthorizedException(e, "invalid access token")
+      throw new UnauthorizedException("invalid access token")
     }
      await this._tokenRepo.upsert({
        access_token: data.accessToken,
