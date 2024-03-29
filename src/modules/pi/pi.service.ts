@@ -24,7 +24,7 @@ export class PiService {
   }
 
   async getUserInfo(accessToken: string): Promise<any> {
-    return this.axiosInstance.get("/me", { headers: { 'Authorization': `Bearer ${accessToken}` }})
+    return this.axiosInstance.get("/v2/me", { headers: { 'Authorization': `Bearer ${accessToken}` }})
   }
 
   async incompleteTransaction(paymentData:PaymentDTO){
