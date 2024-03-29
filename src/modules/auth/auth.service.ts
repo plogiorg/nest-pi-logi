@@ -42,6 +42,7 @@ export class AuthService {
     } catch (e) {
       throw new UnauthorizedException(e, "invalid access token")
     }
+    console.log({data});
      await this._tokenRepo.upsert({
        access_token: data.accessToken,
        username: data.user.username,
