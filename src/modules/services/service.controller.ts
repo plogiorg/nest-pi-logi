@@ -14,6 +14,7 @@ import {
 } from "./dto/response";
 import { UserInfoResponse } from "../auth/types/AuthTypes";
 import { AuthGuard } from "../../core/guards/auth.guard";
+import { PaymentDTO } from "../pi/dto/request";
 
 @Controller({
     group: "Service",
@@ -114,6 +115,13 @@ export default class ServiceController {
     }
 
 
-
+  @Post({
+    path: "/:id",
+    description: "Delete Service",
+    model: GetServiceResponseDTO,
+  })
+  incompleteOrderPayment(@Body() payment: PaymentDTO, @Param("id") id: number) {
+    return this._serviceService.deleteService(id);
+  }
 
 }

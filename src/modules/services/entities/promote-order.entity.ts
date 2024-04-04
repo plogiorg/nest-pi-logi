@@ -7,6 +7,13 @@ import { OrderStatus } from "../types/types";
 
 @Entity("promote_orders")
 export default class PromoteOrderEntity extends BaseEntity {
+
+  constructor(dto?: Partial<PromoteOrderEntity>) {
+    super();
+    Object.assign(this, dto);
+  }
+
+
   @Column({
     name: "pi_payment_id",
   })
@@ -15,7 +22,7 @@ export default class PromoteOrderEntity extends BaseEntity {
   @Column({
     name: "service_id",
   })
-  serviceId: string;
+  serviceId: number;
 
 
   @JoinColumn({ name: "service_id" })

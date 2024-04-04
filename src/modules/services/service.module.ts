@@ -7,11 +7,12 @@ import ServiceEntity from "./entities/service.entity";
 import { AuthModule } from "../auth/auth.module";
 import PromoteOrderEntity from "./entities/promote-order.entity";
 import { PiModule } from "../pi/pi.module";
+import OrderService from "./order.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([ServiceTypeEntity, ServiceEntity, PromoteOrderEntity]), AuthModule, PiModule],
     exports: [ServiceService],
-    providers: [ServiceService],
+    providers: [ServiceService, OrderService],
     controllers: [ServiceController],
 })
 export default class ServiceModule {}
