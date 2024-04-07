@@ -44,4 +44,10 @@ export default class PromoteOrderEntity extends BaseEntity {
   })
   price: number;
 
+  @Column({
+    name: "transaction_id",
+    nullable: true,
+    default: null
+  })
+  transactionId: string;
 }

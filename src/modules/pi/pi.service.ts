@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import CONFIG from "../../config";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { PaymentDTO } from "./dto/request";
@@ -27,8 +27,19 @@ export class PiService {
     return this.axiosInstance.get("/v2/me", { headers: { 'Authorization': `Bearer ${accessToken}` }})
   }
 
-  async incompleteTransaction(paymentData:PaymentDTO){
+  async getPayment(paymentId:string): Promise<AxiosResponse<PaymentDTO>>{
+    return await this.axiosInstance.get(`/v2/payments/${paymentId}`);
+  }
 
+  async completePayment(paymentId:string, txid:string): Promise<AxiosResponse<PaymentDTO>>{
+    return await this.axiosInstance.post(`/v2/payments/${paymentId}/complete`, { txid });
+  }
+
+  async approvePayment(paymentId:string): Promise<AxiosResponse<PaymentDTO>>{
+    return await this.axiosInstance.post(`/v2/payments/${paymentId}/approve`);
+  }
+
+  async incompleteTransaction(paymentData:PaymentDTO){
     const txid = paymentData.transaction.txid;
     const txURL = paymentData.transaction._link;
     const order = await this._serviceService.getOrderByPaymentId(paymentData.identifier)
@@ -36,16 +47,12 @@ export class PiService {
     if(!order){
       throw new NotFoundException("no order found")
     }
-
     const horizonResponse = await this.httpService.axiosRef.get(txURL, { timeout: 2000 })
-
     if (horizonResponse.data.memo !== order.piPaymentId) {
       throw new BadRequestException("Payment id doesn't match.")
     }
 
-
     await this._serviceService.updateOrderByPaymentId(paymentData.identifier, OrderStatus.PAID)
-
     await this.axiosInstance.post(`/v2/payments/${paymentData.transaction}/complete`, { txid });
 
     return { message: `Handled the incomplete payment ${paymentData.identifier}` }

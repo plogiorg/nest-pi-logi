@@ -3,7 +3,6 @@ import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
   CreateServiceRequestDTO,
   CreateServiceTypeRequestDTO, GetServiceParams, UpdateServiceRequestDTO,
-  UpdateStatusRequestDTO,
 } from "./dto/request";
 import ServiceService from "./service.service";
 import {
@@ -15,6 +14,7 @@ import {
 import { UserInfoResponse } from "../auth/types/AuthTypes";
 import { AuthGuard } from "../../core/guards/auth.guard";
 import { PaymentDTO } from "../pi/dto/request";
+import OrderService from "./order.service";
 
 @Controller({
     group: "Service",
@@ -22,7 +22,7 @@ import { PaymentDTO } from "../pi/dto/request";
     version: "1",
 })
 export default class ServiceController {
-    constructor(private _serviceService: ServiceService) {}
+    constructor(private _serviceService: ServiceService, private _orderService: OrderService) {}
 
     @Get({
         path: "/types",
@@ -110,18 +110,44 @@ export default class ServiceController {
         description: "Delete Service",
         model: GetServiceResponseDTO,
     })
-    deleteService( @Param("id") id: number) {
+    deleteService(@Param("id") id: number) {
         return this._serviceService.deleteService(id);
     }
 
 
   @Post({
-    path: "/:id",
-    description: "Delete Service",
+    path: "/order/payment/cancel",
+    description: "cancel Service Payment Order",
     model: GetServiceResponseDTO,
   })
-  incompleteOrderPayment(@Body() payment: PaymentDTO, @Param("id") id: number) {
-    return this._serviceService.deleteService(id);
+  cancelPaymentOrder(@Body() paymentId: string) {
+    return this._orderService.cancelPaymentOrder(paymentId);
   }
 
+  @Post({
+    path: "/order/payment/approve",
+    description: "approve Service Payment Order",
+    model: GetServiceResponseDTO,
+  })
+  approvePaymentOrder(@Body() paymentId: string) {
+    return this._orderService.approvePaymentOrder(paymentId);
+  }
+
+  @Post({
+    path: "/order/payment/complete",
+    description: "complete Service Payment Order",
+    model: GetServiceResponseDTO,
+  })
+  completePaymentOrder(@Body() data:{ paymentId: string, transactionId:string }) {
+    return this._orderService.completePaymentOrder(data.paymentId, data.transactionId);
+  }
+
+  @Post({
+    path: "/order/payment/incomplete",
+    description: "incomplete Service Payment Order handling",
+    model: GetServiceResponseDTO,
+  })
+  incompletePaymentOrder(@Body() payment: PaymentDTO) {
+    return this._orderService.incompletePaymentOrder(payment);
+  }
 }
