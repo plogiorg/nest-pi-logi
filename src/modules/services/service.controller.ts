@@ -1,8 +1,9 @@
 import { Body, Param, Query, Request, UseGuards } from "@nestjs/common";
 import { Controller, Get, Patch, Post, Put } from "src/core/decorators";
 import {
+  CompletePaymentRequestDTO,
   CreateServiceRequestDTO,
-  CreateServiceTypeRequestDTO, GetServiceParams, UpdateServiceRequestDTO,
+  CreateServiceTypeRequestDTO, GetServiceParams, PaymentRequestDTO, UpdateServiceRequestDTO,
 } from "./dto/request";
 import ServiceService from "./service.service";
 import {
@@ -120,8 +121,8 @@ export default class ServiceController {
     description: "cancel Service Payment Order",
     model: GetServiceResponseDTO,
   })
-  cancelPaymentOrder(@Body() paymentId: string) {
-    return this._orderService.cancelPaymentOrder(paymentId);
+  cancelPaymentOrder(@Body() data: PaymentRequestDTO) {
+    return this._orderService.cancelPaymentOrder(data.paymentId);
   }
 
   @Post({
@@ -129,8 +130,8 @@ export default class ServiceController {
     description: "approve Service Payment Order",
     model: GetServiceResponseDTO,
   })
-  approvePaymentOrder(@Body() paymentId: string) {
-    return this._orderService.approvePaymentOrder(paymentId);
+  approvePaymentOrder(@Body() data: PaymentRequestDTO) {
+    return this._orderService.approvePaymentOrder(data.paymentId);
   }
 
   @Post({
@@ -138,7 +139,7 @@ export default class ServiceController {
     description: "complete Service Payment Order",
     model: GetServiceResponseDTO,
   })
-  completePaymentOrder(@Body() data:{ paymentId: string, transactionId:string }) {
+  completePaymentOrder(@Body() data:CompletePaymentRequestDTO) {
     return this._orderService.completePaymentOrder(data.paymentId, data.transactionId);
   }
 

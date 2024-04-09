@@ -120,3 +120,15 @@ export class UpdateServiceRequestDTO {
   @IsString()
   address:string;
 }
+
+export class PaymentRequestDTO {
+  @ApiProperty()
+  @IsString()
+  paymentId:string;
+}
+
+export class CompletePaymentRequestDTO extends PaymentRequestDTO{
+  @ApiProperty()
+  @IsString()
+  transactionId:string;
+}

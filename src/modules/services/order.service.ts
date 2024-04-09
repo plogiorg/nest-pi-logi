@@ -35,9 +35,9 @@ export default class OrderService {
     }
 
     async approvePaymentOrder(paymentId:string){
+        console.log({paymentId});
         const paymentDTOAxiosResponse = await this._piService.getPayment(paymentId);
         const currentPayment = paymentDTOAxiosResponse.data
-
         const promoteOrderEntity = new PromoteOrderEntity({
             piPaymentId: paymentId,
             price: 0.1,
