@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 export class PaymentStatus{
 
@@ -48,10 +48,10 @@ export class PaymentDTO {
 
   @ApiProperty()
   @IsString()
-    user_uid: string;
+  user_uid: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   amount: number;
 
   @ApiProperty()
