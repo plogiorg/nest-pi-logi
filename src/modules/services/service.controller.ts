@@ -149,6 +149,7 @@ export default class ServiceController {
     model: GetServiceResponseDTO,
   })
   incompletePaymentOrder(@Body() payment: PaymentDTO) {
+    console.log({payment});
     return this._orderService.incompletePaymentOrder(payment);
   }
 }

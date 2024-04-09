@@ -24,7 +24,7 @@ export default class OrderService {
     ) {}
 
     async incompletePaymentOrder(payment:PaymentDTO){
-        console.log({ payment }, "payment.metadata");
+        console.log(payment );
         const { serviceId } = payment.metadata as any;
         const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
 
