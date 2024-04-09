@@ -6,6 +6,7 @@ import ServiceService from "../services/service.service";
 import { BadRequestException, NotFoundException } from "../../core/exceptions";
 import { HttpService } from "@nestjs/axios";
 import { OrderStatus } from "../services/types/types";
+import PromoteOrderEntity from "../services/entities/promote-order.entity";
 
 
 @Injectable()
@@ -39,14 +40,10 @@ export class PiService {
     return await this.axiosInstance.post(`/v2/payments/${paymentId}/approve`);
   }
 
-  async incompleteTransaction(paymentData:PaymentDTO){
+  async incompleteTransaction(paymentData:PaymentDTO, order: PromoteOrderEntity){
     const txid = paymentData.transaction.txid;
     const txURL = paymentData.transaction._link;
-    const order = await this._serviceService.getOrderByPaymentId(paymentData.identifier)
 
-    if(!order){
-      throw new NotFoundException("no order found")
-    }
     const horizonResponse = await this.httpService.axiosRef.get(txURL, { timeout: 2000 })
     if (horizonResponse.data.memo !== order.piPaymentId) {
       throw new BadRequestException("Payment id doesn't match.")

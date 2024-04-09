@@ -29,7 +29,8 @@ export default class OrderService {
             //this means that there is a recent order entity with incomplete payment
             const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
             serviceEntity.isPromoted = false
-            return this._serviceEntity.save(serviceEntity)
+            await this._serviceEntity.save(serviceEntity)
+            return  this._piService.incompleteTransaction(payment, promoteOrderEntity)
         }
         return null
     }
