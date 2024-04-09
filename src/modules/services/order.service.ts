@@ -25,7 +25,7 @@ export default class OrderService {
 
     async incompletePaymentOrder(payment:PaymentDTO){
         const { serviceId } = payment.metadata;
-        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
+        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {piPaymentId: payment.identifier}})
 
         console.log({promoteOrderEntity});
         console.log({serviceId});
@@ -43,11 +43,13 @@ export default class OrderService {
     async approvePaymentOrder(paymentId:string){
         const paymentDTOAxiosResponse = await this._piService.getPayment(paymentId);
         const currentPayment = paymentDTOAxiosResponse.data
+        const { serviceId } = currentPayment.metadata;
+
         const promoteOrderEntity = new PromoteOrderEntity({
             piPaymentId: paymentId,
             price: 0.1,
-            serviceId: currentPayment.metadata["serviceId"],
             status: OrderStatus.PENDING,
+            serviceId,
         })
         await this._piService.approvePayment(paymentId);
         this.logger.log(`Approved the payment ${paymentId}`)
