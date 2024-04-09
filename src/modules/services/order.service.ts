@@ -29,9 +29,6 @@ export default class OrderService {
 
         console.log({promoteOrderEntity});
         console.log({serviceId});
-        // TODO: remove this line
-        await this._piService.incompleteTransaction(payment)
-
 
         if(promoteOrderEntity){
             //this means that there is a recent order entity with incomplete payment
