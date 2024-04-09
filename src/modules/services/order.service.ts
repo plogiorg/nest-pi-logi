@@ -24,10 +24,7 @@ export default class OrderService {
     ) {}
 
     async incompletePaymentOrder(payment:PaymentDTO){
-        console.log(payment.metadata, "payment.metadata");
-        if (typeof payment.metadata === "string") {
-            console.log(JSON.parse(payment.metadata), "payment.metadata parsed");
-        }
+        console.log({ payment }, "payment.metadata");
         const { serviceId } = payment.metadata as any;
         const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
 
