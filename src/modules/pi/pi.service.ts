@@ -50,7 +50,7 @@ export class PiService {
     // }
 
     // await this._serviceService.updateOrderByPaymentId(paymentData.identifier, OrderStatus.PAID)
-    await this.axiosInstance.post(`/v2/payments/${paymentData.transaction}/complete`, { txid });
+    await this.axiosInstance.post(`/v2/payments/${txid}/complete`, { txid });
 
     return { message: `Handled the incomplete payment ${paymentData.identifier}` }
 
