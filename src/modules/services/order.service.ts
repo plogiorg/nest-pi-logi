@@ -24,13 +24,13 @@ export default class OrderService {
     ) {}
 
     async incompletePaymentOrder(payment:PaymentDTO){
-        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {piPaymentId: payment.identifier}})
+        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId: payment.metadata["serviceId"]}})
         if(promoteOrderEntity){
             //this means that there is a recent order entity with incomplete payment
             const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
             serviceEntity.isPromoted = false
             await this._serviceEntity.save(serviceEntity)
-            return  this._piService.incompleteTransaction(payment, promoteOrderEntity)
+            return this._piService.incompleteTransaction(payment, promoteOrderEntity)
         }
         return null
     }
