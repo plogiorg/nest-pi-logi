@@ -24,7 +24,13 @@ export default class OrderService {
     ) {}
 
     async incompletePaymentOrder(payment:PaymentDTO){
-        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId: payment.metadata["serviceId"]}})
+        console.log(payment.metadata, "payment.metadata");
+        if (typeof payment.metadata === "string") {
+            console.log(JSON.parse(payment.metadata), "payment.metadata parsed");
+        }
+        const { serviceId } = payment.metadata as any;
+        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
+
         if(promoteOrderEntity){
             //this means that there is a recent order entity with incomplete payment
             const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
