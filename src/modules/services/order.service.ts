@@ -68,6 +68,7 @@ export default class OrderService {
         const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
         const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         console.log({promoteOrderEntity})
+        console.log({paymentDTOAxiosResponse})
         if(promoteOrderEntity){
             //this means that there is a recent order entity with complete payment
             promoteOrderEntity.status = OrderStatus.PAID
