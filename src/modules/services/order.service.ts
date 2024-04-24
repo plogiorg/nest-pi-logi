@@ -25,7 +25,7 @@ export default class OrderService {
 
     async incompletePaymentOrder(payment:PaymentDTO){
         const { serviceId } = payment.metadata;
-        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {piPaymentId: payment.identifier}})
+        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
 
         console.log({promoteOrderEntity});
         console.log({serviceId});
@@ -60,8 +60,11 @@ export default class OrderService {
 
 
     async completePaymentOrder(paymentId:string, transactionId:string){
-        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {piPaymentId: paymentId}})
+        const paymentDTOAxiosResponse = await this._piService.getPayment(paymentId);
+        const { serviceId } = paymentDTOAxiosResponse.data.metadata;
+        const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
         const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
+        console.log({promoteOrderEntity})
         if(promoteOrderEntity){
             //this means that there is a recent order entity with complete payment
             promoteOrderEntity.status = OrderStatus.PAID
