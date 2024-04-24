@@ -56,6 +56,7 @@ export default class OrderService {
             status: OrderStatus.PENDING,
             serviceId,
         })
+        await this._promoteOrderRepo.save(promoteOrderEntity)
         await this._piService.approvePayment(paymentId);
         this.logger.log(`Approved the payment ${paymentId}`)
         return promoteOrderEntity;
@@ -69,6 +70,7 @@ export default class OrderService {
         const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {piPaymentId: currentPayment.identifier}})
         const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         console.log({promoteOrderEntity})
+        console.log({serviceEntity})
         console.log({paymentDTOAxiosResponse})
         if(promoteOrderEntity){
             //this means that there is a recent order entity with complete payment
