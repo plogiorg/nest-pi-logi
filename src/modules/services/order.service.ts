@@ -30,7 +30,7 @@ export default class OrderService {
         console.log({promoteOrderEntity});
         console.log({serviceId});
 
-        const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
+        const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         serviceEntity.isPromoted = false
         await this._serviceEntity.save(serviceEntity)
         return this._piService.incompleteTransaction(payment, promoteOrderEntity)
