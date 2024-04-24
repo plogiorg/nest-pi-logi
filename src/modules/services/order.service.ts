@@ -7,6 +7,7 @@ import PromoteOrderEntity from "./entities/promote-order.entity";
 import { OrderStatus } from "./types/types";
 import { PaymentDTO } from "../pi/dto/request";
 import { PiService } from "../pi/pi.service";
+import { BadRequestException } from "src/core/exceptions";
 
 @Injectable()
 export default class OrderService {
@@ -30,19 +31,16 @@ export default class OrderService {
         console.log({promoteOrderEntity});
         console.log({serviceId});
 
+       
+
+        if(!promoteOrderEntity) throw new BadRequestException("cannot handle incomplete")
+
         const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         serviceEntity.isPromoted = false
         await this._serviceEntity.save(serviceEntity)
         return this._piService.incompleteTransaction(payment, promoteOrderEntity)
         
-        // if(promoteOrderEntity){
-        //     //this means that there is a recent order entity with incomplete payment
-        //     const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
-        //     serviceEntity.isPromoted = false
-        //     await this._serviceEntity.save(serviceEntity)
-        //     return this._piService.incompleteTransaction(payment, promoteOrderEntity)
-        // }
-        // return null
+
     }
 
     async approvePaymentOrder(paymentId:string){
