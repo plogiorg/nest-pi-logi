@@ -40,15 +40,15 @@ export class PiService {
     return await this.axiosInstance.post(`/v2/payments/${paymentId}/approve`);
   }
 
-  async incompleteTransaction(paymentData:PaymentDTO, order: PromoteOrderEntity){
+  async incompleteTransaction(paymentData:PaymentDTO, order?: PromoteOrderEntity){
     const txid = paymentData.transaction.txid;
     const txURL = paymentData.transaction._link;
 
     const horizonResponse = await this.httpService.axiosRef.get(txURL, { timeout: 2000 })
 
-    if (horizonResponse.data.identifier !== order.piPaymentId) {
-      throw new BadRequestException("Payment id doesn't match.")
-    }
+    // if (horizonResponse.data.identifier !== order.piPaymentId) {
+    //   throw new BadRequestException("Payment id doesn't match.")
+    // }
 
     await this._serviceService.updateOrderByPaymentId(paymentData.identifier, OrderStatus.PAID)
     await this.axiosInstance.post(`/v2/payments/${paymentData.identifier}/complete`, { txid });
