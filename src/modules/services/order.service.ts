@@ -33,7 +33,7 @@ export default class OrderService {
 
        
 
-        if(!promoteOrderEntity) throw new BadRequestException("cannot handle incomplete")
+        // if(!promoteOrderEntity) throw new BadRequestException("cannot handle incomplete")
 
         const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         serviceEntity.isPromoted = false
@@ -66,7 +66,7 @@ export default class OrderService {
         const paymentDTOAxiosResponse = await this._piService.getPayment(paymentId);
         const { serviceId } = paymentDTOAxiosResponse.data.metadata;
         const promoteOrderEntity = await this._promoteOrderRepo.findOne({where: {serviceId}})
-        const serviceEntity = await this._serviceEntity.findOne({where: {id: promoteOrderEntity.serviceId}})
+        const serviceEntity = await this._serviceEntity.findOne({where: {id: serviceId}})
         console.log({promoteOrderEntity})
         if(promoteOrderEntity){
             //this means that there is a recent order entity with complete payment
