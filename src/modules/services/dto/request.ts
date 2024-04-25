@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsBooleanString, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateServiceTypeRequestDTO {
   @ApiProperty()
@@ -80,7 +80,7 @@ export class GetServiceParams{
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBoolean()
+  @IsBooleanString()
   isPromoted: boolean;
 
   @ApiPropertyOptional()
