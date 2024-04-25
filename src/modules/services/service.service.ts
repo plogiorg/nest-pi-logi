@@ -97,6 +97,10 @@ export default class ServiceService {
             query = query.where('service.serviceTypeId = :id', { id: `${params.typeId}` });
         }
 
+        if (params.isPromoted) {
+            query = query.where('service.isPromoted = :isPromoted', { id: `${params.isPromoted}` });
+        }
+
         if (params.priceFrom && params.priceTo) {
             query = query.andWhere('service.price BETWEEN :priceFrom AND :priceTo', {
                 priceFrom: `${params.priceFrom}`,

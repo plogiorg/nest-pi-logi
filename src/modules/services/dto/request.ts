@@ -80,6 +80,11 @@ export class GetServiceParams{
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsBoolean()
+  isPromoted: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   sortBy:string
 }
 
