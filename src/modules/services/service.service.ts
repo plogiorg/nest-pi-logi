@@ -93,8 +93,13 @@ export default class ServiceService {
             query = query.where('service.country = :country', { country: `${params.country}` });
         }
 
+
         if (params.typeId) {
-            query = query.where('service.serviceTypeId = :id', { id: `${params.typeId}` });
+            if(params.typeId == 0){
+                query = query.where('service.isPromoted = :isPromoted', { isPromoted: `${true}` });
+            } else {
+                query = query.where('service.serviceTypeId = :id', { id: `${params.typeId}` });
+            }
         }
 
         if (params.isPromoted) {
@@ -128,6 +133,15 @@ export default class ServiceService {
 
     async getServiceTypes(): Promise<GetServiceTypesResponseDTO> {
         const types = await this._serviceTypeEntity.find();
+        types.unshift({
+            image: "https://cdn-icons-png.freepik.com/512/7466/7466665.png",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            isActive: true,
+            title: "Featured",
+            description: "Our Premium Services",
+            id: 0
+        })
         return { types };
     }
 
