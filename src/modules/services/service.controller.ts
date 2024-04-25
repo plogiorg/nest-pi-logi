@@ -73,7 +73,7 @@ export default class ServiceController {
     @UseGuards(AuthGuard)
     createService(@Body() data: CreateServiceRequestDTO, @Request() req: Request & {user:UserInfoResponse}) {
       console.log({req});
-        return this._serviceService.createService(data, req.user.sub);
+        return this._serviceService.createService(data, req.user?.sub || req.user?.uid);
     }
 
   @Get({
