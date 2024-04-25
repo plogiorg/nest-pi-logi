@@ -21,7 +21,8 @@ export type LoginResponse = {
 };
 
 export type UserInfoResponse = {
-  sub: string;
+  sub?: string;
+  uid:string;
   email_verified: boolean;
   preferred_username: string;
 };

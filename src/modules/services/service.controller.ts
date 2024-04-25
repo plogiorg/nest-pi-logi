@@ -83,7 +83,7 @@ export default class ServiceController {
   })
   @UseGuards(AuthGuard)
   getProviderServices(@Request() req: Request & {user:UserInfoResponse}) {
-    return this._serviceService.getProviderServices(req.user.sub);
+    return this._serviceService.getProviderServices(req.user?.uid || req.user?.sub);
   }
 
 

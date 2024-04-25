@@ -58,9 +58,6 @@ export class AuthController {
     model: null,
   })
   getProfile(@Request() req: Request & {user:UserInfoResponse}) {
-    console.log(req.user)
-    const user = req.user
-    console.log({user})
     return req.user
   }
 
