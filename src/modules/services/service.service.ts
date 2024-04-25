@@ -98,7 +98,7 @@ export default class ServiceService {
         }
 
         if (params.isPromoted) {
-            query = query.where('service.isPromoted = :isPromoted', { id: `${params.isPromoted}` });
+            query = query.where('service.isPromoted = :isPromoted', { id: `${true}` });
         }
 
         if (params.priceFrom && params.priceTo) {
