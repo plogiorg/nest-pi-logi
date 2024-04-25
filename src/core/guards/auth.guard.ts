@@ -21,7 +21,8 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       switch (loginType) {
         case AuthType.PI:{
-          request['user'] = await this.piService.getUserInfo(token);
+          const authResponse = await this.piService.getUserInfo(token);
+          request['user'] = authResponse.data
           request['token'] = token
           break
         }
